@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.0 - 2026-11-14
+
+### Features
+- **FlightRadar24 logo**: the radar mark of FlightRadar24 now sits as a badge on the header icon of both cards (illustrated and classic headers, mini card included), on a white rounded tile so that it stays readable in the dark theme. The README shows the FlightRadar24 logotype under the project icon and in the supported integrations table.
+
 ## 1.0.0 - 2026-11-14
 
 ### Features

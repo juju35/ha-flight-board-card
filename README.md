@@ -10,6 +10,10 @@
 
 <p align="center"><img src="https://raw.githubusercontent.com/juju35/ha-flight-board-card/main/images/icon.svg" alt="Flight Board Card" width="120"></p>
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/juju35/ha-flight-board-card/main/images/flightradar24.svg" alt="FlightRadar24" width="160">
+</p>
+
 An airport **departures and arrivals board** for Home Assistant, under an animated illustration of the airport: the plane takes off on the Departures tab and lands on the Arrivals tab, by day or under the stars.
 
 The cards are built on top of the [FlightRadar24 integration](https://github.com/AlexandrErohin/home-assistant-flightradar24): track an airport there, add the card, and its sensors are **discovered automatically**, whatever their names and your Home Assistant language.
@@ -32,6 +36,7 @@ The cards are built on top of the [FlightRadar24 integration](https://github.com
 - One line per flight: the scheduled time in bold, the city with the flight number (and optionally the airline and the aircraft type), and a coloured status pill: **on time** (green), a delay such as **+25 min** (orange), **boarding**, **departed**, **landed** and **estimated** (blue), **canceled** and **diverted** (red)
 - Click a flight for its detail, in a popup at the top of the card: airline, aircraft and registration, callsign, scheduled, estimated and actual times, and the full airport name; it closes with its button, a click anywhere else, Escape, or when the card leaves the page
 - Mini card: the next flight laid on the sky (time, « to » or « from » city, flight number, « in 23 min », status pill) with a detail button at the top right that unfolds the full board; a click anywhere outside the card folds it back
+- The FlightRadar24 radar mark as a badge on the header icon, on a white tile readable in both themes
 - `illustration: false` for a classic header with a round icon, as on the other cards
 - Visual editor for both cards (no YAML needed); options left at their default are kept out of the YAML
 - Light and dark themes, `prefers-reduced-motion` honoured (the plane stays still, mid-flight)
@@ -42,7 +47,7 @@ The cards are built on top of the [FlightRadar24 integration](https://github.com
 
 | Integration | What the cards show |
 |---|---|
-| [FlightRadar24](https://github.com/AlexandrErohin/home-assistant-flightradar24) (Marketplace) | The `flights` attribute of the **Airport departures** and **Airport arrivals** sensors (the next 50 flights of each board), the **Airport track** entity (the airport code), and the airport's statistics sensors (**on time**, **delayed**, **delay average**) |
+| <img src="https://raw.githubusercontent.com/juju35/ha-flight-board-card/main/images/flightradar24-mark.svg" alt="" width="20"> [FlightRadar24](https://github.com/AlexandrErohin/home-assistant-flightradar24) (Marketplace) | The `flights` attribute of the **Airport departures** and **Airport arrivals** sensors (the next 50 flights of each board), the **Airport track** entity (the airport code), and the airport's statistics sensors (**on time**, **delayed**, **delay average**) |
 
 ## Prerequisites
 
@@ -302,7 +307,7 @@ Issues and pull requests are welcome: bug reports with your card configuration a
 
 ## Credits
 
-Card idea by [mielikki33](https://github.com/mielikki33). Flight data from the [FlightRadar24 integration](https://github.com/AlexandrErohin/home-assistant-flightradar24) by AlexandrErohin. This project is not affiliated with Flightradar24. The airlines, flight numbers and registrations of the screenshots are fictional.
+Card idea by [mielikki33](https://github.com/mielikki33). Flight data from the [FlightRadar24 integration](https://github.com/AlexandrErohin/home-assistant-flightradar24) by AlexandrErohin. Flightradar24 and its logo are trademarks of Flightradar24 AB; this project is not affiliated with Flightradar24. The airlines, flight numbers and registrations of the screenshots are fictional.
 
 ## License
 

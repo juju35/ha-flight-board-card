@@ -307,3 +307,15 @@ test("every flight status is translated", () => {
     for (const k of Object.keys(fb.STRINGS.en).filter((x) => x.startsWith("status_")))
       assert.notEqual(fb.STRINGS[l][k], undefined, `${l}.${k}`);
 });
+
+test("the FlightRadar24 mark sits as a badge on the header icon of both cards, illustrated or not", () => {
+  for (const [Cls, config] of [
+    [fb.FlightBoardCard, {}],
+    [fb.FlightBoardCard, { illustration: false }],
+    [fb.FlightBoardMiniCard, {}],
+    [fb.FlightBoardMiniCard, { illustration: false }],
+  ]) {
+    const html = card(Cls, config)._render();
+    assert.match(html, /<div class="badge"><svg class="icon [^"]*"[^>]*>.*?<\/svg><span class="brand" title="FlightRadar24"><svg class="mark" viewBox="0 0 45 45"/s);
+  }
+});
