@@ -1,0 +1,26 @@
+{
+  "name": "ha-flight-board-card",
+  "version": "1.0.0",
+  "description": "Animated airport departures and arrivals board card for Home Assistant (FlightRadar24 integration).",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/juju35/ha-flight-board-card.git"
+  },
+  "bugs": {
+    "url": "https://github.com/juju35/ha-flight-board-card/issues"
+  },
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "check": "node scripts/build.mjs && node --check dist/flight-board-card.js",
+    "test": "node --test test/*.test.mjs",
+    "screenshots": "npm run build && node scripts/screenshots/stills.mjs && node scripts/screenshots/animations.mjs"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "acorn": "^8.19.0",
+    "css-tree": "^3.2.1",
+    "playwright": "^1.64.1"
+  }
+}
