@@ -160,19 +160,19 @@ Every option is in the visual editor: none of them is YAML only.
 
 The plane takes off on the Departures tab and lands on the Arrivals tab, in an 8-second loop that starts again when you switch tabs; the beacon blinks, the windsock waves, the clouds drift and the runway lights pulse. At night, the stars twinkle and the terminal and the tower are lit. With `prefers-reduced-motion`, everything stays still.
 
-Take-off (Departures, day):
+Take-off (Departures; the night picture with a dark theme):
 
 | Light | Dark |
 |---|---|
 | <img src="https://raw.githubusercontent.com/juju35/ha-flight-board-card/main/screenshots/takeoff.gif" alt="take-off animation" width="400"> | <img src="https://raw.githubusercontent.com/juju35/ha-flight-board-card/main/screenshots/takeoff-dark.gif" alt="take-off animation, dark theme" width="400"> |
 
-Landing (Arrivals, day):
+Landing (Arrivals; the night picture with a dark theme):
 
 | Light | Dark |
 |---|---|
 | <img src="https://raw.githubusercontent.com/juju35/ha-flight-board-card/main/screenshots/landing.gif" alt="landing animation" width="400"> | <img src="https://raw.githubusercontent.com/juju35/ha-flight-board-card/main/screenshots/landing-dark.gif" alt="landing animation, dark theme" width="400"> |
 
-Night:
+Night (`illustration_theme: night`):
 
 | Light | Dark |
 |---|---|
