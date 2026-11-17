@@ -1764,13 +1764,13 @@ const STYLE = `
   .warning { padding: 16px; color: color-mix(in srgb, var(--fb-warn) 40%, var(--primary-text-color, #212121)); }
 
   /* ── Illustrated header ── */
-  .banner { position: relative; height: var(--banner-h, 92px); overflow: hidden; --runway-h: 12px;
+  .banner { position: relative; height: var(--banner-h, 90px); overflow: hidden; --runway-h: 12px;
             --sky-text: #0d2a45; --sky-muted: #3b5b78;
             background: linear-gradient(90deg, #f1f8ff 0%, #e2f1fd 34%, #b9def8 70%, #9fd0f3 100%); }
   .banner.night { --sky-text: #ffffff; --sky-muted: rgba(255,255,255,.78);
                   background: linear-gradient(90deg, #1b2f52 0%, #15284a 36%, #0f1f3d 72%, #0a1830 100%); }
   .banner .scene { position: absolute; right: 0; bottom: var(--runway-h); height: calc(100% - var(--runway-h));
-                   width: min(calc((var(--banner-h, 92px) - var(--runway-h)) * 2.5), var(--scene-max, 58%)); overflow: hidden; }
+                   width: min(calc((var(--banner-h, 90px) - var(--runway-h)) * 2.5), var(--scene-max, 58%)); overflow: hidden; }
   .runway { position: absolute; left: 0; right: 0; bottom: 0; height: var(--runway-h); background: #858c94;
             box-shadow: inset 0 1px 0 #6f767d, inset 0 -1px 0 #6f767d; }
   .night .runway { background: #2c323b; box-shadow: inset 0 1px 0 #1f242b, inset 0 -1px 0 #1f242b; }
@@ -1785,7 +1785,7 @@ const STYLE = `
   .night .runway .lights { background: radial-gradient(circle, #ffd27a 0 1.3px, rgba(255,210,122,.35) 1.6px, transparent 2.4px) 4px 0 / 16px 3px repeat-x; opacity: 1;
                            animation-name: fb-pulse-night; }
   .head { position: absolute; z-index: 1; left: 0; top: 0; bottom: var(--runway-h); box-sizing: border-box;
-          right: min(calc((var(--banner-h, 92px) - var(--runway-h)) * 2.5), var(--scene-max, 58%));
+          right: min(calc((var(--banner-h, 90px) - var(--runway-h)) * 2.5), var(--scene-max, 58%));
           display: flex; align-items: center; gap: 10px; padding: 8px 8px 8px 14px; min-width: 0; color: var(--sky-text); }
   .badge { width: 40px; height: 40px; flex: none; border-radius: 50%; display: grid; place-items: center; color: var(--fb-accent);
            background: rgba(255,255,255,.62); box-shadow: inset 0 0 0 1px rgba(47,128,237,.18); }
@@ -1906,7 +1906,7 @@ const STYLE = `
 
 // The mini card: a lower banner, the next flight laid on the sky.
 const MINI_STYLE = `
-  .banner { --banner-h: 80px; --runway-h: 10px; --scene-max: 40%; }
+  .banner { --banner-h: 90px; --runway-h: 10px; --scene-max: 40%; }
   .head { padding-right: 6px; }
   .next { display: flex; flex-direction: column; gap: 1px; flex: 1 1 0; min-width: 0; }
   .next .l1 { display: flex; align-items: center; gap: 8px; min-width: 0; white-space: nowrap; }
