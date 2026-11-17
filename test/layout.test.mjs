@@ -84,6 +84,13 @@ const measure = async (cases) => {
         const name = sr.querySelector(".name, .clock");
         const badge = sr.querySelector(".head .badge, .header .badge");
         const modal = sr.querySelector(".modal");
+        // The header's status pill: its label whole (no ellipsis) or hidden on purpose (the dot alone), on the
+        // title row or under it, and its share of the title block.
+        const pill = sr.querySelector(".head .hpill, .header .hpill");
+        const txt = pill?.querySelector(".txt");
+        const block = pill?.closest(".titles, .next");
+        const title = block?.querySelector(".name, .clock");
+        const mid = (n) => (rect(n).top + rect(n).bottom) / 2;
         const r = {
           outside,
           under,
@@ -93,6 +100,16 @@ const measure = async (cases) => {
           modalTop: modal ? rect(modal).top - card.top : null,
           modalOut: modal ? rect(modal).right > card.right + 0.5 || rect(modal).bottom > card.bottom + 0.5 : false,
           rows: sr.querySelectorAll(".row").length,
+          pill: pill
+            ? {
+                cut: txt.scrollWidth > txt.clientWidth + 0.5,
+                dotOnly: getComputedStyle(txt).position === "absolute",
+                inside: rect(pill).right <= rect(block).right + 0.5 && rect(pill).bottom <= card.bottom,
+                onTitleRow: Math.abs(mid(pill) - mid(title)) < 3,
+                share: rect(pill).width / rect(block).width,
+                label: pill.getAttribute("title"),
+              }
+            : null,
         };
         box.remove();
         return r;
@@ -145,5 +162,28 @@ test("the flight popup opens at the top of the card and stays in it", { timeout:
     const at = `${c.type} ${c.lang} ${c.theme} ${c.width}px`;
     assert.ok(r.modalTop !== null && r.modalTop <= 12, `popup top ${r.modalTop}: ${at}`);
     assert.equal(r.modalOut, false, `popup outside the card: ${at}`);
+  });
+});
+
+test("every header has its status pill: whole label from 245 px, on the title row when it fits, the dot alone at 200 px", { timeout: 120000 }, async (t) => {
+  if (skip) return t.skip(skip);
+  const cases = [
+    ...matrix([{ type: "flight-board-card", config: {} }, { type: "flight-board-card", config: { illustration: false } }], [200, 245, 300, 380, 460, 500]),
+    ...matrix([{ type: "flight-board-mini-card", config: {} }, { type: "flight-board-mini-card", config: { illustration: false } }], [200, 245, 300, 380, 500]),
+    ...matrix([{ type: "flight-board-mini-card", config: {}, zoom: true }], [200, 245, 300, 500]),
+  ];
+  const results = await measure(cases);
+  results.forEach((r, i) => {
+    const c = cases[i];
+    const at = `${c.type} ${JSON.stringify(c.config)}${c.zoom ? " zoomed" : ""} ${c.lang} ${c.theme} ${c.width}px`;
+    assert.ok(r.pill, `no status pill: ${at}`);
+    assert.ok(r.pill.inside, `pill outside its block: ${at}`);
+    if (c.width <= 200) assert.ok(r.pill.dotOnly, `the dot alone at ${c.width} px: ${at}`);
+    else {
+      assert.ok(!r.pill.dotOnly && !r.pill.cut, `pill label « ${r.pill.label} » cut: ${at}`);
+      // On the title row of the full card, the pill leaves the title most of the room.
+      if (r.pill.onTitleRow && c.type === "flight-board-card") assert.ok(r.pill.share <= 0.53, `pill ${(r.pill.share * 100).toFixed(0)} % of the title block: ${at}`);
+    }
+    assert.ok(r.nameWidth >= r.ch, `title ${r.nameWidth.toFixed(0)} px: ${at}`);
   });
 });

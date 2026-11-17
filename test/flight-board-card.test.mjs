@@ -197,18 +197,26 @@ test("an airport not tracked yet, and no FlightRadar24 entity at all", () => {
   assert.match(card(fb.FlightBoardCard, {}, { states: {}, language: "en" })._render(), /No FlightRadar24 airport sensors found/);
 });
 
-test("night illustration: forced, from the sun, else from the dark theme", () => {
+test("night illustration: forced, else the sun below the horizon or the dark theme", () => {
   assert.match(card(fb.FlightBoardCard, { illustration_theme: "night" })._render(), /class="banner night"/);
+  assert.match(card(fb.FlightBoardCard, { illustration_theme: "night" }, mockHass({ sun: "above_horizon" }))._render(), /banner night/);
   assert.doesNotMatch(card(fb.FlightBoardCard, { illustration_theme: "day" }, mockHass({ dark: true }))._render(), /banner night/);
+  assert.doesNotMatch(card(fb.FlightBoardCard, { illustration_theme: "day" }, mockHass({ sun: "below_horizon", dark: true }))._render(), /banner night/);
   assert.match(card(fb.FlightBoardCard, {}, mockHass({ sun: "below_horizon" }))._render(), /banner night/);
-  assert.doesNotMatch(card(fb.FlightBoardCard, {}, mockHass({ sun: "above_horizon", dark: true }))._render(), /banner night/);
   assert.match(card(fb.FlightBoardCard, {}, mockHass({ dark: true }))._render(), /banner night/);
+  assert.doesNotMatch(card(fb.FlightBoardCard, {}, mockHass({ sun: "above_horizon" }))._render(), /banner night/);
+  assert.doesNotMatch(card(fb.FlightBoardCard, {}, mockHass())._render(), /banner night/);
+});
+
+test("a dark theme while the sun is up shows the night illustration", () => {
+  assert.match(card(fb.FlightBoardCard, {}, mockHass({ sun: "above_horizon", dark: true }))._render(), /class="banner night"/);
+  assert.match(card(fb.FlightBoardMiniCard, {}, mockHass({ sun: "above_horizon", dark: true }))._render(), /class="banner night"/);
 });
 
 test("illustration: false gives the classic header with its round icon", () => {
   const html = card(fb.FlightBoardCard, { illustration: false })._render();
   assert.doesNotMatch(html, /class="scene"/);
-  assert.match(html, /<div class="header"><div class="badge">/);
+  assert.match(html, /<div class="header"><div class="badge (ok|warn|danger|na)">/);
 });
 
 test("the mini card: the next flight on the banner, its countdown and status", () => {
@@ -316,6 +324,47 @@ test("the FlightRadar24 mark sits as a badge on the header icon of both cards, i
     [fb.FlightBoardMiniCard, { illustration: false }],
   ]) {
     const html = card(Cls, config)._render();
-    assert.match(html, /<div class="badge"><svg class="icon [^"]*"[^>]*>.*?<\/svg><span class="brand" title="FlightRadar24"><svg class="mark" viewBox="0 0 45 45"/s);
+    assert.match(html, /<div class="badge (?:ok|warn|danger|na|accent)"><svg class="icon [^"]*"[^>]*>.*?<\/svg><span class="brand" title="FlightRadar24"><svg class="mark" viewBox="0 0 45 45"/s);
   }
+});
+
+test("the header's status pill: cancellations, else delays, else on time; grey when nothing is tracked or listed", () => {
+  const withDepartures = (flights) => {
+    const h = mockHass();
+    h.states["sensor.flightradar24_airport_departures"] = { ...h.states["sensor.flightradar24_airport_departures"], attributes: { flights } };
+    return h;
+  };
+  const pill = (html) => html.match(/<div class="trow">.*?<span class="chip hpill (\w+)" title="([^"]*)">/s)?.slice(1);
+  const badge = (html) => html.match(/<div class="badge (\w+)">/)?.[1];
+  const flights = [dep({ flight_id: "a", time_scheduled_departure: at(120) }), dep({ flight_id: "b", time_scheduled_departure: at(150) })];
+  let html = card(fb.FlightBoardCard, {}, withDepartures(flights))._render();
+  assert.deepEqual(pill(html), ["ok", "On time"]);
+  assert.equal(badge(html), "ok");
+  flights.push(dep({ flight_id: "c", time_scheduled_departure: at(160), time_estimated_departure: at(190) }));
+  html = card(fb.FlightBoardCard, {}, withDepartures(flights))._render();
+  assert.deepEqual(pill(html), ["warn", "Delays"]);
+  assert.equal(badge(html), "warn");
+  flights.push(dep({ flight_id: "d", time_scheduled_departure: at(170), status: "canceled", status_text: "Canceled" }));
+  html = card(fb.FlightBoardCard, {}, withDepartures(flights))._render();
+  assert.deepEqual(pill(html), ["danger", "Cancellations"]);
+  assert.equal(badge(html), "danger");
+  // Only the flights listed count (max_flights).
+  assert.deepEqual(pill(card(fb.FlightBoardCard, { max_flights: 2 }, withDepartures(flights))._render()), ["ok", "On time"]);
+  assert.deepEqual(pill(card(fb.FlightBoardCard, {}, withDepartures([]))._render()), ["na", "No flights"]);
+  html = card(fb.FlightBoardCard, {}, mockHass({ tracked: false }))._render();
+  assert.deepEqual(pill(html), ["na", "Not tracked"]);
+  assert.equal(badge(html), "na");
+  // Translated, and in the classic header too.
+  assert.deepEqual(pill(card(fb.FlightBoardCard, { language: "fr", illustration: false }, withDepartures(flights))._render()), ["danger", "Annulations"]);
+});
+
+test("the mini card's pill: the next flight's status beside its time, the board's beside the airport when none is shown", () => {
+  const mini = card(fb.FlightBoardMiniCard)._render();
+  const [, cls] = mini.match(/<div class="l1"><span class="clock">[^<]*<\/span><span class="chip hpill (\w+)"/) || [];
+  assert.ok(cls, "pill beside the clock");
+  assert.match(mini, new RegExp(`<div class="badge ${cls}">`));
+  const off = card(fb.FlightBoardMiniCard, {}, mockHass({ tracked: false }))._render();
+  assert.match(off, /<div class="l1"><span class="name">Airport<\/span><span class="chip hpill na" title="Not tracked">/);
+  assert.match(off, /<div class="badge na">/);
+  assert.match(off, /No airport tracked/);
 });
