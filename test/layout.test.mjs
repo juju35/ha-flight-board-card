@@ -39,8 +39,13 @@ const measure = async (cases) => {
   await page.addScriptTag({ content: src });
   const hass = mockHass();
   const out = await page.evaluate(
-    ({ cases, hass, THEMES }) =>
-      cases.map((c) => {
+    async ({ cases, hass, THEMES }) => {
+      // Sequential, each card measured two frames after it was mounted (the card fits its status pill on the
+      // resize observer's first notice, as in Home Assistant).
+      const all = [];
+      for (const c of cases)
+        all.push(
+          await (async () => {
         const box = document.createElement("div");
         box.style.cssText = `width:${c.width}px;${Object.entries(THEMES[c.theme]).map(([k, v]) => `${k}:${v}`).join(";")}`;
         document.body.appendChild(box);
@@ -52,6 +57,7 @@ const measure = async (cases) => {
         const click = (sel) => sr.querySelector(sel)?.dispatchEvent(new MouseEvent("click", { bubbles: true, composed: true, detail: 1 }));
         if (c.zoom) click(".zoom");
         if (c.detail) click(".row");
+        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
         const card = sr.querySelector("ha-card").getBoundingClientRect();
         const rect = (n) => n.getBoundingClientRect();
         const shown = (n) => n.getClientRects().length > 0 && getComputedStyle(n).visibility !== "hidden" && getComputedStyle(n).display !== "none";
@@ -84,19 +90,83 @@ const measure = async (cases) => {
         const name = sr.querySelector(".name, .clock");
         const badge = sr.querySelector(".head .badge, .header .badge");
         const modal = sr.querySelector(".modal");
+        // The header's status pill: its label whole (no ellipsis) or hidden on purpose (the dot alone), on the
+        // title row or under it, and its share of the title block.
+        const pill = sr.querySelector(".head .hpill, .header .hpill");
+        const txt = pill?.querySelector(".txt");
+        const block = pill?.closest(".titles, .next");
+        const title = block?.querySelector(".name, .clock");
+        const mid = (n) => (rect(n).top + rect(n).bottom) / 2;
+        // Whether the whole pill fits on the title row beside the whole title (or time), and whether that title is
+        // whole (no ellipsis).
+        const tname = block?.querySelector(".trow > .name, .l1 > .name, .l1 > .clock");
+        const whole = (n) => {
+          const range = document.createRange();
+          range.selectNodeContents(n);
+          return range.getBoundingClientRect().width;
+        };
+        let fits = false;
+        let nameWhole = true;
+        if (tname && pill) {
+          const label = pill.cloneNode(true);
+          label.style.cssText = "position:absolute;visibility:hidden;padding:1px 8px";
+          label.querySelector(".txt").style.cssText = "position:static";
+          pill.parentElement.appendChild(label);
+          fits = whole(tname) + 8 + rect(label).width <= rect(block).right - rect(tname).left - 1;
+          label.remove();
+          nameWhole = whole(tname) <= rect(tname).width + 0.05;
+        }
+        // Nothing of the banner's text under its runway strip or above it.
+        const bannerEl = sr.querySelector(".banner");
+        // What shows of an element vertically: its box cut by its ancestors that hide their overflow.
+        const seen = (n) => {
+          let { top, bottom } = rect(n);
+          for (let p = n.parentElement; p && p !== bannerEl; p = p.parentElement)
+            if (getComputedStyle(p).overflowY !== "visible") {
+              top = Math.max(top, rect(p).top);
+              bottom = Math.min(bottom, rect(p).bottom);
+            }
+          return { top, bottom };
+        };
+        const low = bannerEl
+          ? [...bannerEl.querySelectorAll(".head *")]
+              .filter((n) => shown(n) && n.children.length === 0 && n.textContent.trim())
+              .filter((n) => {
+                const v = seen(n);
+                return v.bottom - v.top > 0.5 && (v.bottom > rect(bannerEl).bottom - 10 + 0.5 || v.top < rect(bannerEl).top - 0.5);
+              })
+              .map((n) => n.textContent.trim())
+          : [];
         const r = {
           outside,
           under,
           nameWidth: name ? rect(name).width : 0,
+          // A title shorter than that (an airport code) is whole.
+          nameFull: name ? name.scrollWidth : 0,
           ch: name ? parseFloat(getComputedStyle(name).fontSize) * 2 : 0,
           badge: badge ? [Math.round(rect(badge).width), Math.round(rect(badge).height)] : null,
           modalTop: modal ? rect(modal).top - card.top : null,
           modalOut: modal ? rect(modal).right > card.right + 0.5 || rect(modal).bottom > card.bottom + 0.5 : false,
           rows: sr.querySelectorAll(".row").length,
+          pill: pill
+            ? {
+                cut: txt.scrollWidth > txt.clientWidth + 0.5,
+                dotOnly: getComputedStyle(txt).position === "absolute",
+                inside: rect(pill).right <= rect(block).right + 0.5 && rect(pill).bottom <= card.bottom,
+                onTitleRow: Math.abs(mid(pill) - mid(title)) < 3,
+                fits,
+                nameWhole,
+                low,
+                label: pill.getAttribute("title"),
+              }
+            : null,
         };
         box.remove();
         return r;
-      }),
+          })(),
+        );
+      return all;
+    },
     { cases, hass, THEMES },
   );
   await page.close();
@@ -104,7 +174,7 @@ const measure = async (cases) => {
   return out;
 };
 
-const LANGS = ["en", "de", "el", "sr", "lv", "hu", "pt"];
+const LANGS = ["en", "fr", "de", "el", "ru", "sr", "lv", "hu", "pt"];
 const matrix = (variants, widths) => {
   const cases = [];
   for (const v of variants) for (const lang of LANGS) for (const theme of ["light", "dark"]) for (const width of widths) cases.push({ ...v, lang, theme, width });
@@ -131,7 +201,7 @@ test("at their minimum width and wider, nothing leaves the card and no text lies
     const at = `${c.type} ${JSON.stringify(c.config)}${c.zoom ? " zoomed" : ""} ${c.lang} ${c.theme} ${c.width}px`;
     assert.deepEqual(r.outside, [], `outside the card: ${at}`);
     assert.deepEqual(r.under, [], `text under the scenery: ${at}`);
-    assert.ok(r.nameWidth >= r.ch, `title ${r.nameWidth.toFixed(0)} px: ${at}`);
+    assert.ok(r.nameWidth + 0.5 >= Math.min(r.ch, r.nameFull), `title ${r.nameWidth.toFixed(0)} px: ${at}`);
     assert.deepEqual(r.badge, [40, 40], `header icon: ${at}`);
   });
 });
@@ -145,5 +215,32 @@ test("the flight popup opens at the top of the card and stays in it", { timeout:
     const at = `${c.type} ${c.lang} ${c.theme} ${c.width}px`;
     assert.ok(r.modalTop !== null && r.modalTop <= 12, `popup top ${r.modalTop}: ${at}`);
     assert.equal(r.modalOut, false, `popup outside the card: ${at}`);
+  });
+});
+
+test("every header has its status pill: on the title row only beside a whole title, else under the subtitle, its label whole or its dot alone, never under the runway", { timeout: 180000 }, async (t) => {
+  if (skip) return t.skip(skip);
+  const cases = [
+    ...matrix([{ type: "flight-board-card", config: {} }, { type: "flight-board-card", config: { illustration: false } }], [200, 245, 300, 380, 460, 500]),
+    ...matrix([{ type: "flight-board-mini-card", config: {} }, { type: "flight-board-mini-card", config: { illustration: false } }], [200, 245, 300, 380, 500]),
+    ...matrix([{ type: "flight-board-mini-card", config: {}, zoom: true }], [200, 245, 300, 400, 460, 500]),
+  ];
+  const results = await measure(cases);
+  results.forEach((r, i) => {
+    const c = cases[i];
+    const at = `${c.type} ${JSON.stringify(c.config)}${c.zoom ? " zoomed" : ""} ${c.lang} ${c.theme} ${c.width}px`;
+    assert.ok(r.pill, `no status pill: ${at}`);
+    assert.ok(r.pill.inside, `pill outside its block: ${at}`);
+    assert.deepEqual(r.pill.low, [], `text under the runway strip or above the banner: ${at}`);
+    if (c.width <= 200) assert.ok(r.pill.dotOnly, `the dot alone at ${c.width} px: ${at}`);
+    else {
+      assert.ok(r.pill.dotOnly || !r.pill.cut, `pill label « ${r.pill.label} » cut: ${at}`);
+      // Beside the title only while the title stays whole; under the subtitle only when the whole title and the whole
+      // pill do not fit side by side; on the title row of the full card ("RNS") from 380 px, scenery or not.
+      if (r.pill.onTitleRow && !r.pill.dotOnly) assert.ok(r.pill.nameWhole, `title cut beside the pill: ${at}`);
+      if (!r.pill.onTitleRow && r.pill.fits) assert.fail(`pill under the statistics although it fits beside the title: ${at}`);
+      if (c.lang === "en" && c.width >= 380 && (c.type === "flight-board-card" || c.zoom)) assert.ok(r.pill.onTitleRow, `pill not beside the title: ${at}`);
+    }
+    assert.ok(r.nameWidth + 0.5 >= Math.min(r.ch, r.nameFull), `title ${r.nameWidth.toFixed(0)} px: ${at}`);
   });
 });

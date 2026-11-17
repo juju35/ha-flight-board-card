@@ -34,19 +34,21 @@ const encode = (dir, out, width) => {
 };
 
 const GIFS = [
-  // Departures, day: the plane rolls down the runway and takes off.
-  { name: "takeoff", tag: "flight-board-card", width: 460, banner: true, config: { illustration_theme: "day" } },
-  // Arrivals, day: the plane comes down, touches down and rolls out.
-  { name: "landing", tag: "flight-board-card", width: 460, banner: true, config: { illustration_theme: "day", default_tab: "arrivals" } },
-  // Night: stars, moon, lit windows and runway lights.
-  { name: "night", tag: "flight-board-card", width: 460, banner: true, config: { illustration_theme: "night" } },
+  // Departures: the plane rolls down the runway and takes off. `illustration_theme: auto` (as the mini card): day in
+  // light, night in the dark twin (dark theme rule).
+  { name: "takeoff", tag: "flight-board-card", width: 460, banner: true, config: {} },
+  // Arrivals: the plane comes down, touches down and rolls out.
+  { name: "landing", tag: "flight-board-card", width: 460, banner: true, config: { default_tab: "arrivals" } },
+  // Night, forced: stars, moon, lit windows and runway lights. Light theme only: in the dark theme it would be the
+  // same GIF as takeoff-dark (one GIF per distinct state).
+  { name: "night", tag: "flight-board-card", width: 460, banner: true, config: { illustration_theme: "night" }, themes: ["light"] },
   // The mini card.
-  { name: "mini", tag: "flight-board-mini-card", width: 380, banner: false, config: { illustration_theme: "day" } },
+  { name: "mini", tag: "flight-board-mini-card", width: 380, banner: false, config: {} },
 ];
 
 const browser = await launch();
 for (const g of GIFS) {
-  for (const theme of ["light", "dark"]) {
+  for (const theme of g.themes ?? ["light", "dark"]) {
     const suffix = theme === "dark" ? "-dark" : "";
     const page = await openPage(browser, { theme, width: g.width, label: `${g.name}${suffix}` });
     await mountCard(page, { tag: g.tag, config: g.config, dark: theme === "dark" });

@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.2.0 - 2026-11-17
+
+### Features
+- **Status pill in the header** of both cards, full and mini, compact and unfolded, illustrated or classic: a coloured dot and a short status right after the title, in the colour of the header icon, which now follows the status too — **On time** (green), **Delays** (orange) or **Cancellations** (red, a canceled or diverted flight) among the flights listed, **No flights** or **Not tracked** (grey). It stays on the title row only while the title stays whole and the pill keeps its whole label beside it (measured by the card in every language, no fixed width threshold); otherwise it goes to its own line under the statistics, kept to one line, and shows only its dot when even that does not fit the banner, and at 200 px or less, the label kept in its tooltip and for screen readers. On the mini card, the next flight's status pill sits right after its time, and the header icon takes its colour; with no flight to show, the airport and the board's pill take its place. New texts translated into every language.
+- The mini card's unfolded view: its collapse button gets the same frosted glass and hover as the compact view's expand button.
+
+### Fixes
+- **Night illustration with a dark theme by day**: with `illustration_theme: auto` (the default), the night picture now shows when the sun is below the horizon **or** Home Assistant uses a dark theme, like the other cards; a dark dashboard by day used to keep the day sky. `day` and `night` still force it.
+
 ## 1.1.1 - 2026-11-17
 
 ### Fixes

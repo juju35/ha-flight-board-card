@@ -45,6 +45,10 @@ const STRINGS = {
     no_entities: "No FlightRadar24 airport sensors found. Is the FlightRadar24 integration installed?",
     not_tracked: "No airport tracked: enter an airport code in the FlightRadar24 « Airport track » entity.",
     status_on_time: "On time",
+    delays: "Delays",
+    cancellations: "Cancellations",
+    no_flights_short: "No flights",
+    not_tracked_short: "Not tracked",
     status_delayed: "Delayed",
     status_boarding: "Boarding",
     status_departed: "Departed",
@@ -107,6 +111,10 @@ const STRINGS = {
     no_entities: "Aucun capteur d'aéroport FlightRadar24 trouvé. L'intégration FlightRadar24 est-elle installée ?",
     not_tracked: "Aucun aéroport suivi : saisissez un code d'aéroport dans l'entité FlightRadar24 « Airport track ».",
     status_on_time: "À l'heure",
+    delays: "Retards",
+    cancellations: "Annulations",
+    no_flights_short: "Aucun vol",
+    not_tracked_short: "Non suivi",
     status_delayed: "Retardé",
     status_boarding: "Embarquement",
     status_departed: "Parti",
@@ -169,6 +177,10 @@ const STRINGS = {
     no_entities: "Keine FlightRadar24-Flughafensensoren gefunden. Ist die FlightRadar24-Integration installiert?",
     not_tracked: "Kein Flughafen verfolgt: Gib einen Flughafencode in der FlightRadar24-Entität « Airport track » ein.",
     status_on_time: "Pünktlich",
+    delays: "Verspätungen",
+    cancellations: "Annullierungen",
+    no_flights_short: "Keine Flüge",
+    not_tracked_short: "Nicht verfolgt",
     status_delayed: "Verspätet",
     status_boarding: "Boarding",
     status_departed: "Gestartet",
@@ -231,6 +243,10 @@ const STRINGS = {
     no_entities: "No se han encontrado sensores de aeropuerto de FlightRadar24. ¿Está instalada la integración FlightRadar24?",
     not_tracked: "Ningún aeropuerto seguido: introduce un código de aeropuerto en la entidad « Airport track » de FlightRadar24.",
     status_on_time: "Puntual",
+    delays: "Retrasos",
+    cancellations: "Cancelaciones",
+    no_flights_short: "Sin vuelos",
+    not_tracked_short: "Sin seguimiento",
     status_delayed: "Retrasado",
     status_boarding: "Embarcando",
     status_departed: "Despegado",
@@ -294,6 +310,10 @@ const STRINGS = {
     no_entities: "Нису пронађени сензори аеродрома FlightRadar24. Да ли је интеграција FlightRadar24 инсталирана?",
     not_tracked: "Ниједан аеродром се не прати: унесите код аеродрома у FlightRadar24 ентитет « Airport track ».",
     status_on_time: "На време",
+    delays: "Кашњења",
+    cancellations: "Отказивања",
+    no_flights_short: "Нема летова",
+    not_tracked_short: "Не прати се",
     status_delayed: "Касни",
     status_boarding: "Укрцавање",
     status_departed: "Полетео",
@@ -357,6 +377,10 @@ const STRINGS = {
     no_entities: "Nisu pronađeni senzori aerodroma FlightRadar24. Da li je integracija FlightRadar24 instalirana?",
     not_tracked: "Nijedan aerodrom se ne prati: unesite kod aerodroma u FlightRadar24 entitet « Airport track ».",
     status_on_time: "Na vreme",
+    delays: "Kašnjenja",
+    cancellations: "Otkazivanja",
+    no_flights_short: "Nema letova",
+    not_tracked_short: "Ne prati se",
     status_delayed: "Kasni",
     status_boarding: "Ukrcavanje",
     status_departed: "Poleteo",
@@ -419,6 +443,10 @@ const STRINGS = {
     no_entities: "Nessun sensore aeroporto di FlightRadar24 trovato. L'integrazione FlightRadar24 è installata?",
     not_tracked: "Nessun aeroporto seguito: inserisci un codice aeroporto nell'entità « Airport track » di FlightRadar24.",
     status_on_time: "In orario",
+    delays: "Ritardi",
+    cancellations: "Cancellazioni",
+    no_flights_short: "Nessun volo",
+    not_tracked_short: "Non monitorato",
     status_delayed: "In ritardo",
     status_boarding: "Imbarco",
     status_departed: "Partito",
@@ -481,6 +509,10 @@ const STRINGS = {
     no_entities: "Geen FlightRadar24-luchthavensensoren gevonden. Is de FlightRadar24-integratie geïnstalleerd?",
     not_tracked: "Geen luchthaven gevolgd: voer een luchthavencode in bij de FlightRadar24-entiteit « Airport track ».",
     status_on_time: "Op tijd",
+    delays: "Vertragingen",
+    cancellations: "Annuleringen",
+    no_flights_short: "Geen vluchten",
+    not_tracked_short: "Niet gevolgd",
     status_delayed: "Vertraagd",
     status_boarding: "Boarding",
     status_departed: "Vertrokken",
@@ -543,6 +575,10 @@ const STRINGS = {
     no_entities: "Nenhum sensor de aeroporto do FlightRadar24 encontrado. A integração FlightRadar24 está instalada?",
     not_tracked: "Nenhum aeroporto seguido: introduza um código de aeroporto na entidade « Airport track » do FlightRadar24.",
     status_on_time: "À hora",
+    delays: "Atrasos",
+    cancellations: "Cancelamentos",
+    no_flights_short: "Sem voos",
+    not_tracked_short: "Não seguido",
     status_delayed: "Atrasado",
     status_boarding: "Embarque",
     status_departed: "Partiu",
@@ -607,6 +643,10 @@ const STRINGS = {
     no_entities: "Nie znaleziono czujników lotniska FlightRadar24. Czy integracja FlightRadar24 jest zainstalowana?",
     not_tracked: "Brak śledzonego lotniska: wpisz kod lotniska w encji « Airport track » FlightRadar24.",
     status_on_time: "Planowo",
+    delays: "Opóźnienia",
+    cancellations: "Odwołania",
+    no_flights_short: "Brak lotów",
+    not_tracked_short: "Nieśledzone",
     status_delayed: "Opóźniony",
     status_boarding: "Boarding",
     status_departed: "Wystartował",
@@ -670,6 +710,10 @@ const STRINGS = {
     no_entities: "Nu s-au găsit senzori de aeroport FlightRadar24. Este instalată integrarea FlightRadar24?",
     not_tracked: "Niciun aeroport urmărit: introduceți un cod de aeroport în entitatea FlightRadar24 « Airport track ».",
     status_on_time: "La timp",
+    delays: "Întârzieri",
+    cancellations: "Anulări",
+    no_flights_short: "Niciun zbor",
+    not_tracked_short: "Neurmărit",
     status_delayed: "Întârziat",
     status_boarding: "Îmbarcare",
     status_departed: "Plecat",
@@ -732,6 +776,10 @@ const STRINGS = {
     no_entities: "Ingen FlightRadar24-lufthavnssensorer fundet. Er FlightRadar24-integrationen installeret?",
     not_tracked: "Ingen lufthavn fulgt: indtast en lufthavnskode i FlightRadar24-enheden « Airport track ».",
     status_on_time: "Til tiden",
+    delays: "Forsinkelser",
+    cancellations: "Aflysninger",
+    no_flights_short: "Ingen fly",
+    not_tracked_short: "Ikke fulgt",
     status_delayed: "Forsinket",
     status_boarding: "Boarding",
     status_departed: "Afgået",
@@ -794,6 +842,10 @@ const STRINGS = {
     no_entities: "Inga flygplatssensorer från FlightRadar24 hittades. Är FlightRadar24-integrationen installerad?",
     not_tracked: "Ingen flygplats följs: ange en flygplatskod i FlightRadar24-entiteten « Airport track ».",
     status_on_time: "I tid",
+    delays: "Förseningar",
+    cancellations: "Inställda",
+    no_flights_short: "Inga flyg",
+    not_tracked_short: "Ej bevakad",
     status_delayed: "Försenad",
     status_boarding: "Boarding",
     status_departed: "Avgått",
@@ -856,6 +908,10 @@ const STRINGS = {
     no_entities: "Не са намерени сензори за летище от FlightRadar24. Инсталирана ли е интеграцията FlightRadar24?",
     not_tracked: "Не се следи летище: въведете код на летище в обекта « Airport track » на FlightRadar24.",
     status_on_time: "Навреме",
+    delays: "Закъснения",
+    cancellations: "Отменени",
+    no_flights_short: "Няма полети",
+    not_tracked_short: "Не се следи",
     status_delayed: "Закъснява",
     status_boarding: "Качване",
     status_departed: "Излетял",
@@ -920,6 +976,10 @@ const STRINGS = {
     no_entities: "Сенсоры аэропорта FlightRadar24 не найдены. Установлена ли интеграция FlightRadar24?",
     not_tracked: "Аэропорт не отслеживается: введите код аэропорта в сущность FlightRadar24 « Airport track ».",
     status_on_time: "Вовремя",
+    delays: "Задержки",
+    cancellations: "Отмены",
+    no_flights_short: "Нет рейсов",
+    not_tracked_short: "Не отслеживается",
     status_delayed: "Задерживается",
     status_boarding: "Посадка",
     status_departed: "Вылетел",
@@ -984,6 +1044,10 @@ const STRINGS = {
     no_entities: "Сенсори аеропорту FlightRadar24 не знайдено. Чи встановлено інтеграцію FlightRadar24?",
     not_tracked: "Аеропорт не відстежується: введіть код аеропорту в сутність FlightRadar24 « Airport track ».",
     status_on_time: "Вчасно",
+    delays: "Затримки",
+    cancellations: "Скасування",
+    no_flights_short: "Немає рейсів",
+    not_tracked_short: "Не відстежується",
     status_delayed: "Затримується",
     status_boarding: "Посадка",
     status_departed: "Вилетів",
@@ -1046,6 +1110,10 @@ const STRINGS = {
     no_entities: "Nem található FlightRadar24 repülőtér-érzékelő. Telepítve van a FlightRadar24 integráció?",
     not_tracked: "Nincs követett repülőtér: adjon meg egy repülőtérkódot a FlightRadar24 « Airport track » entitásában.",
     status_on_time: "Pontos",
+    delays: "Késések",
+    cancellations: "Törlések",
+    no_flights_short: "Nincs járat",
+    not_tracked_short: "Nincs követve",
     status_delayed: "Késik",
     status_boarding: "Beszállás",
     status_departed: "Elindult",
@@ -1110,6 +1178,10 @@ const STRINGS = {
     no_entities: "Nenašli sa letiskové senzory FlightRadar24. Je nainštalovaná integrácia FlightRadar24?",
     not_tracked: "Nesleduje sa žiadne letisko: zadajte kód letiska do entity FlightRadar24 « Airport track ».",
     status_on_time: "Načas",
+    delays: "Meškania",
+    cancellations: "Zrušenia",
+    no_flights_short: "Žiadne lety",
+    not_tracked_short: "Nesledované",
     status_delayed: "Meškanie",
     status_boarding: "Nástup",
     status_departed: "Odletel",
@@ -1174,6 +1246,10 @@ const STRINGS = {
     no_entities: "Nenalezeny letištní senzory FlightRadar24. Je nainstalována integrace FlightRadar24?",
     not_tracked: "Nesleduje se žádné letiště: zadejte kód letiště do entity FlightRadar24 « Airport track ».",
     status_on_time: "Včas",
+    delays: "Zpoždění",
+    cancellations: "Zrušení",
+    no_flights_short: "Žádné lety",
+    not_tracked_short: "Nesledováno",
     status_delayed: "Zpoždění",
     status_boarding: "Nástup",
     status_departed: "Odletěl",
@@ -1238,6 +1314,10 @@ const STRINGS = {
     no_entities: "Ni najdenih letaliških senzorjev FlightRadar24. Ali je integracija FlightRadar24 nameščena?",
     not_tracked: "Nobeno letališče ni spremljano: vnesite kodo letališča v entiteto FlightRadar24 « Airport track ».",
     status_on_time: "Točno",
+    delays: "Zamude",
+    cancellations: "Odpovedi",
+    no_flights_short: "Ni letov",
+    not_tracked_short: "Ni spremljano",
     status_delayed: "Zamuda",
     status_boarding: "Vkrcavanje",
     status_departed: "Vzletel",
@@ -1301,6 +1381,10 @@ const STRINGS = {
     no_entities: "FlightRadar24 lidostas sensori nav atrasti. Vai FlightRadar24 integrācija ir instalēta?",
     not_tracked: "Neviena lidosta netiek sekota: ievadiet lidostas kodu FlightRadar24 entītijā « Airport track ».",
     status_on_time: "Laikā",
+    delays: "Kavējumi",
+    cancellations: "Atcelšanas",
+    no_flights_short: "Nav reisu",
+    not_tracked_short: "Netiek sekots",
     status_delayed: "Kavējas",
     status_boarding: "Iekāpšana",
     status_departed: "Izlidojis",
@@ -1363,6 +1447,10 @@ const STRINGS = {
     no_entities: "Δεν βρέθηκαν αισθητήρες αεροδρομίου του FlightRadar24. Είναι εγκατεστημένη η ενσωμάτωση FlightRadar24;",
     not_tracked: "Δεν παρακολουθείται αεροδρόμιο: εισαγάγετε έναν κωδικό αεροδρομίου στην οντότητα « Airport track » του FlightRadar24.",
     status_on_time: "Στην ώρα της",
+    delays: "Καθυστερήσεις",
+    cancellations: "Ακυρώσεις",
+    no_flights_short: "Χωρίς πτήσεις",
+    not_tracked_short: "Χωρίς παρακολούθηση",
     status_delayed: "Καθυστέρηση",
     status_boarding: "Επιβίβαση",
     status_departed: "Αναχώρησε",
@@ -1628,6 +1716,13 @@ const inDialog = (ev) => ev.composedPath().some((n) => ["ha-more-info-dialog", "
 // "A click elsewhere" is caught on the pointer, not only on the click event: on iOS (Safari and the companion app)
 // a tap on something that is not clickable sends no click to the page. The handler runs when the press and the
 // release are both outside the card; keyboard clicks (no click count) still go through the click event.
+// The width of an element's whole text in fractional pixels, even while an ellipsis cuts it.
+const textWidth = (el) => {
+  const range = document.createRange();
+  range.selectNodeContents(el);
+  return range.getBoundingClientRect().width || el.scrollWidth;
+};
+
 const watchOutside = (card, handler) => {
   let downOutside = false;
   const outside = (ev) => !ev.composedPath().includes(card);
@@ -1746,7 +1841,7 @@ const sceneSvg = (kind, night, run) => {
 const STYLE = `
   :host { --fb-accent: #2f80ed; --fb-ok: var(--success-color, #43a047); --fb-warn: var(--warning-color, #ffa600);
           --fb-danger: var(--error-color, #db4437); --fb-na: var(--disabled-text-color, #9e9e9e); display: block; }
-  ha-card { overflow: hidden; position: relative; container-type: inline-size; }
+  ha-card { overflow: hidden; position: relative; container: fbcard / inline-size; }
   /* A size container has no width of its own content: in a parent sized by its content the card would fall to a
      few pixels. This empty grid gives it a natural width of 400 px without any minimum. */
   :host::before { content: ""; display: grid; grid-template-columns: minmax(0, 400px); height: 0; }
@@ -1770,7 +1865,10 @@ const STYLE = `
   .banner.night { --sky-text: #ffffff; --sky-muted: rgba(255,255,255,.78);
                   background: linear-gradient(90deg, #1b2f52 0%, #15284a 36%, #0f1f3d 72%, #0a1830 100%); }
   .banner .scene { position: absolute; right: 0; bottom: var(--runway-h); height: calc(100% - var(--runway-h));
-                   width: min(calc((var(--banner-h, 90px) - var(--runway-h)) * 2.5), var(--scene-max, 58%)); overflow: hidden; }
+                   width: var(--scene-w); overflow: hidden; }
+  /* The scenery's width: up to 2.5 × its height and --scene-max of the banner; from 380 to 420 px it narrows a little
+     (down to 160 px), so that a short title keeps its status pill beside it. */
+  .banner { --scene-w: min(calc((var(--banner-h, 90px) - var(--runway-h)) * 2.5), var(--scene-max, 58%), max(160px, 100cqw - 220px)); }
   .runway { position: absolute; left: 0; right: 0; bottom: 0; height: var(--runway-h); background: #858c94;
             box-shadow: inset 0 1px 0 #6f767d, inset 0 -1px 0 #6f767d; }
   .night .runway { background: #2c323b; box-shadow: inset 0 1px 0 #1f242b, inset 0 -1px 0 #1f242b; }
@@ -1785,11 +1883,15 @@ const STYLE = `
   .night .runway .lights { background: radial-gradient(circle, #ffd27a 0 1.3px, rgba(255,210,122,.35) 1.6px, transparent 2.4px) 4px 0 / 16px 3px repeat-x; opacity: 1;
                            animation-name: fb-pulse-night; }
   .head { position: absolute; z-index: 1; left: 0; top: 0; bottom: var(--runway-h); box-sizing: border-box;
-          right: min(calc((var(--banner-h, 90px) - var(--runway-h)) * 2.5), var(--scene-max, 58%));
-          display: flex; align-items: center; gap: 10px; padding: 8px 8px 8px 14px; min-width: 0; color: var(--sky-text); }
-  .badge { width: 40px; height: 40px; flex: none; border-radius: 50%; display: grid; place-items: center; color: var(--fb-accent);
-           background: rgba(255,255,255,.62); box-shadow: inset 0 0 0 1px rgba(47,128,237,.18); }
-  .night .badge { background: rgba(255,255,255,.12); color: #8fbaff; box-shadow: inset 0 0 0 1px rgba(255,255,255,.14); }
+          right: var(--scene-w, 0px);
+          display: flex; align-items: center; gap: 10px; padding: 4px 8px 4px 14px; min-width: 0; color: var(--sky-text); }
+  /* The header's text block is a container: the status pill leaves the title row when it lacks room. */
+  .head, .header { container: fbhead / inline-size; }
+  /* The header icon takes the status colour of the pill (--c of its ok / warn / danger / na class). */
+  .badge { width: 40px; height: 40px; flex: none; border-radius: 50%; display: grid; place-items: center;
+           color: color-mix(in srgb, var(--c, var(--fb-accent)) 88%, #0d2a45);
+           background: rgba(255,255,255,.62); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c, var(--fb-accent)) 22%, transparent); }
+  .night .badge { background: rgba(255,255,255,.12); color: color-mix(in srgb, var(--c, #8fbaff) 70%, #ffffff); box-shadow: inset 0 0 0 1px rgba(255,255,255,.14); }
   .badge .icon { width: 24px; height: 24px; }
   /* Brand badge on the header icon (FlightRadar24 radar mark): on a white rounded tile, readable in both themes. */
   .badge { position: relative; }
@@ -1798,8 +1900,12 @@ const STYLE = `
                   box-shadow: 0 0 0 1px var(--divider-color, rgba(0,0,0,.12)), 0 0 0 3px var(--card-background-color, #fff); }
   .banner .badge .brand { box-shadow: 0 0 0 1px rgba(13,42,69,.16), 0 1px 3px rgba(13,42,69,.18); }
   .badge .brand .mark { width: 100%; height: 100%; }
-  .titles { flex: 1 1 0; min-width: 0; overflow: hidden; }
-  .name { font-size: 16px; font-weight: 500; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .titles { flex: 1 1 0; min-width: 0; overflow: hidden; display: flex; flex-direction: column; }
+  /* The title row: the title, then the status pill right after it with its whole label (placed by _fitPill). */
+  .trow { display: flex; align-items: center; gap: 8px; min-width: 0; }
+  .name { font-size: 16px; font-weight: 500; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+          flex: 0 1000 auto; min-width: 0; }
+  .trow .hpill { flex: none; max-width: none; }
   .name .code { font-weight: 400; opacity: .7; }
   /* The statistics on two lines at most: a part that does not fit goes to a third line, clipped away; the "·" that
      starts a line sits in the negative margin, clipped too. */
@@ -1858,10 +1964,29 @@ const STYLE = `
     .banner .scene { display: none; }
     .head { right: 0; }
   }
+  /* Pills on the sky: a frosted glass under the tint. */
+  .banner .chip { background: color-mix(in srgb, var(--c) 18%, rgba(255,255,255,.78)); color: color-mix(in srgb, var(--c) 45%, #0d2a45); }
+  .banner.night .chip { background: color-mix(in srgb, var(--c) 30%, rgba(8,18,38,.55)); color: color-mix(in srgb, var(--c) 35%, #ffffff); }
+  /* The whole title and the whole pill do not fit side by side (measured by the card, see _fitPill): the pill goes to
+     its own line, under the statistics, kept to one line; if that does not fit the header either, the dot alone. */
+  .titles.below > .trow { display: contents; }
+  .titles.below > .trow .hpill { order: 3; align-self: flex-start; max-width: 100%; margin-top: 2px; }
+  .titles.below .stats { order: 2; max-height: 16px; }
+  .titles.dot-only > .trow { display: flex; }
+  .titles.dot-only > .trow .hpill { order: 0; align-self: center; margin-top: 0; }
+  :is(.titles, .next).dot-only .hpill { padding: 0; background: none !important; overflow: visible; }
+  :is(.titles, .next).dot-only .hpill .txt { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  /* Very narrow: the dot alone, back on the title row (the label stays in its tooltip and for screen readers). */
+  @container fbcard (max-width: 200px) {
+    .titles.below > .trow { display: flex; }
+    .titles.below > .trow .hpill { order: 0; align-self: center; margin-top: 0; }
+    .hpill { padding: 0; background: none !important; overflow: visible; }
+    .hpill .txt { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  }
 
   /* ── Classic header (illustration: false) ── */
   .header { display: flex; align-items: center; gap: 10px; padding: 12px 14px 8px; }
-  .header .badge { color: var(--fb-accent); background: color-mix(in srgb, var(--fb-accent) 16%, transparent); box-shadow: none; }
+  .header .badge { color: var(--c, var(--fb-accent)); background: color-mix(in srgb, var(--c, var(--fb-accent)) 16%, transparent); box-shadow: none; }
   .header .stats { color: var(--secondary-text-color); }
 
   /* ── Tabs, right under the header ── */
@@ -1911,14 +2036,21 @@ const MINI_STYLE = `
   .next { display: flex; flex-direction: column; gap: 1px; flex: 1 1 0; min-width: 0; }
   .next .l1 { display: flex; align-items: center; gap: 8px; min-width: 0; white-space: nowrap; }
   .next .clock { font-size: 22px; font-weight: 600; line-height: 26px; font-variant-numeric: tabular-nums; flex: none; }
-  .next .chip { flex: 0 1 auto; }
+  .next .l1 > .chip { flex: none; max-width: none; }
+  .next .l1 > .name { flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+  /* The time (or the airport) and the whole pill do not fit side by side (see _fitPill): the pill under the flight,
+     its lines kept to one; if that does not fit the header either, the dot alone beside the time. */
+  .next.below > .l1 { display: contents; }
+  .next.below > :not(.l1) { order: 2; }
+  .next.below > .l1 > .chip { order: 3; align-self: flex-start; margin-top: 2px; }
+  .next.below .none { -webkit-line-clamp: 1; }
+  .next.dot-only > .l1 { display: flex; }
+  .next.dot-only > .l1 > .chip { order: 0; align-self: center; margin-top: 0; }
   .next .city { font-size: 13px; line-height: 17px; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .next .what { font-size: 12px; line-height: 16px; color: var(--sky-muted); min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .header { --sky-muted: var(--secondary-text-color); }
-  .next .none { font-size: 13px; color: var(--sky-muted); }
-  /* Pills on the sky: a frosted glass under the tint. */
-  .banner .chip { background: color-mix(in srgb, var(--c) 18%, rgba(255,255,255,.78)); color: color-mix(in srgb, var(--c) 45%, #0d2a45); }
-  .banner.night .chip { background: color-mix(in srgb, var(--c) 30%, rgba(8,18,38,.55)); color: color-mix(in srgb, var(--c) 35%, #ffffff); }
+  .next .none { font-size: 12px; line-height: 16px; color: var(--sky-muted); overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+  .next .l1 .name { font-size: 16px; line-height: 26px; }
   .zoom { all: unset; position: absolute; z-index: 2; top: 5px; right: 5px; cursor: pointer; width: 24px; height: 24px; border-radius: 50%;
           display: grid; place-items: center; color: #33506b; background: rgba(255,255,255,.55); box-shadow: inset 0 0 0 1px rgba(255,255,255,.7);
           backdrop-filter: blur(4px); }
@@ -1926,16 +2058,23 @@ const MINI_STYLE = `
   .zoom:hover { background: rgba(255,255,255,.75); }
   .night .zoom:hover, .zoom.on-night:hover { background: rgba(255,255,255,.22); }
   .zoom .icon { width: 16px; height: 16px; }
-  @container (max-width: 280px) { .banner .scene { display: none; } .head { right: 0; padding-right: 40px; } }
+  @container (max-width: 280px) { .banner .scene { display: none; } .head { right: 0; padding-right: 34px; } }
+  /* A narrow mini card: a smaller clock leaves its status pill whole. */
+  @container fbcard (max-width: 260px) { .next .clock { font-size: 20px; } .next .l1 { gap: 6px; } }
+  /* Without the illustration, tighter margins too: the next flight's status keeps its whole label beside the clock. */
+  @container fbcard (max-width: 260px) { .header.plainmini { gap: 6px; padding-left: 10px; padding-right: 38px; } }
 `;
 // The zoomed mini card: the full card, with the detail button over its banner.
 const ZOOM_STYLE = `
   .zoom { all: unset; position: absolute; z-index: 2; top: 5px; right: 5px; cursor: pointer; width: 24px; height: 24px; border-radius: 50%;
-          display: grid; place-items: center; color: #33506b; background: rgba(255,255,255,.55); box-shadow: inset 0 0 0 1px rgba(255,255,255,.7); }
+          display: grid; place-items: center; color: #33506b; background: rgba(255,255,255,.55); box-shadow: inset 0 0 0 1px rgba(255,255,255,.7);
+          backdrop-filter: blur(4px); }
+  .zoom:hover { background: rgba(255,255,255,.75); }
   .zoom.on-night { color: #ffffff; background: rgba(255,255,255,.12); box-shadow: inset 0 0 0 1px rgba(255,255,255,.2); }
+  .zoom.on-night:hover { background: rgba(255,255,255,.22); }
   .zoom.plain { color: var(--secondary-text-color); background: none; box-shadow: inset 0 0 0 1px var(--divider-color, rgba(127,127,127,.3)); top: 18px; right: 12px; }
   .zoom .icon { width: 16px; height: 16px; }
-  .header { position: relative; padding-right: 48px; }
+  .header { position: relative; padding-right: 40px; }
 `;
 
 // ---------------------------------------------------------------------------
@@ -2011,6 +2150,18 @@ class FlightBoardCard extends HTMLElement {
 
   connectedCallback() {
     (this._outsideWatch ??= watchOutside(this, (ev) => this._onOutside(ev))).on();
+    // A new width (or the web font loaded): the status pill is fitted again, in the next frame.
+    if (typeof ResizeObserver === "function") {
+      this._resize ??= new ResizeObserver((entries) => {
+        const w = Math.round(entries.at(-1).contentRect.width);
+        if (w === this._fitWidth) return;
+        this._fitWidth = w;
+        cancelAnimationFrame(this._fitFrame);
+        this._fitFrame = requestAnimationFrame(() => this._fitPill());
+      });
+      this._resize.observe(this);
+    }
+    document.fonts?.ready?.then(() => this._fitPill());
     // The times ("in 23 min", boarding, past flights) follow the clock: checked every 30 s.
     clearInterval(this._timer);
     this._timer = setInterval(() => this._hass && this._config && (this.hass = this._hass), 30000);
@@ -2020,9 +2171,57 @@ class FlightBoardCard extends HTMLElement {
   disconnectedCallback() {
     this._outsideWatch?.off();
     clearInterval(this._timer);
+    this._resize?.disconnect();
+    this._fitWidth = null;
     // Left (another view, a conditional card hidden): the popup closes without anything else.
     this._detail = null;
     window.removeEventListener("keydown", this._onKey);
+  }
+
+  // The header's status pill goes right after the title, on its row, only while the title stays whole and the
+  // pill's whole label fits beside it; otherwise it takes a line of its own under the subtitle (.below), the title
+  // whole on its row (cut only when it does not fit alone). There, in the banner, the subtitle keeps one line; if the
+  // text still does not fit above the ground strip, the pill keeps its dot alone (.dot-only, its label in its tooltip
+  // and for screen readers). Measured after each render and on each new width, whatever the language: no fixed
+  // width threshold.
+  _fitPill() {
+    if (!this.isConnected) return;
+    for (const t of this.shadowRoot?.querySelectorAll?.(".titles, .next") || []) {
+      const row = t.querySelector(".trow, .l1");
+      const pills = row ? [...row.children].filter((n) => n.matches(".chip")) : [];
+      if (!pills.length || !pills[0].getBoundingClientRect) continue;
+      t.classList.remove("below", "dot-only");
+      const name = row.querySelector(".name, .clock");
+      const gap = parseFloat(getComputedStyle(row).columnGap) || 0;
+      const title = name && getComputedStyle(name).display !== "none" ? textWidth(name) + gap : 0;
+      const need = pills.reduce((w, p) => w + p.getBoundingClientRect().width + gap, title - gap);
+      if (need > t.getBoundingClientRect().width - 0.5) {
+        t.classList.add("below");
+        const banner = t.closest(".banner");
+        if (banner) {
+          const b = banner.getBoundingClientRect();
+          // Each element as it shows: its box cut by its ancestors that hide their overflow (a clamped line).
+          const out = [...t.querySelectorAll("*")].some((n) => {
+            let { top, bottom } = n.getBoundingClientRect();
+            for (let p = n.parentElement; p && p !== t; p = p.parentElement) {
+              if (getComputedStyle(p).overflowY === "visible") continue;
+              top = Math.max(top, p.getBoundingClientRect().top);
+              bottom = Math.min(bottom, p.getBoundingClientRect().bottom);
+            }
+            return bottom - top > 0.5 && (top < b.top - 0.5 || bottom > b.bottom - (parseFloat(getComputedStyle(banner).getPropertyValue("--runway-h")) || 10) + 0.5);
+          });
+          if (out) t.classList.add("dot-only");
+        }
+      }
+      // A subtitle cut by its ellipsis keeps its whole text in its tooltip.
+      const s = t.querySelector(".none");
+      if (s && (!s.hasAttribute("title") || s.dataset.fit)) {
+        const cut = s.scrollWidth > s.clientWidth + 1;
+        s.toggleAttribute("data-fit", cut);
+        if (cut) s.title = s.textContent.trim();
+        else s.removeAttribute("title");
+      }
+    }
   }
 
   _t(key, vars) {
@@ -2079,17 +2278,16 @@ class FlightBoardCard extends HTMLElement {
       this._html = html;
       morph(this.shadowRoot, html);
     }
+    this._fitPill();
   }
 
-  // Night illustration: forced by illustration_theme, else the sun below the horizon, else the dark theme.
+  // Night illustration: forced by illustration_theme, else the sun below the horizon or the dark theme (a dark
+  // dashboard by day gets the night picture too).
   _night() {
     const mode = this._config.illustration_theme;
     if (mode === "night") return true;
     if (mode === "day") return false;
-    const sun = this._s("sun.sun")?.state;
-    if (sun === "below_horizon") return true;
-    if (sun === "above_horizon") return false;
-    return !!this._hass?.themes?.darkMode;
+    return this._s("sun.sun")?.state === "below_horizon" || !!this._hass?.themes?.darkMode;
   }
 
   // Formats a Unix time (seconds) in the time zone and the 12/24 h setting of Home Assistant; the weekday when
@@ -2157,7 +2355,24 @@ class FlightBoardCard extends HTMLElement {
           ? `${this._t("status_estimated")} ${this._time(info.estimated)}`
           : this._t(`status_${info.key}`);
     const title = info.key === "delayed" ? `${this._t("status_delayed")} · ${text}` : text;
-    return `<span class="chip ${info.cls}" title="${esc(title)}"><span class="dot"></span><span class="txt">${esc(text)}</span></span>`;
+    return `<span class="chip hpill ${info.cls}" title="${esc(title)}"><span class="dot"></span><span class="txt">${esc(text)}</span></span>`;
+  }
+
+  // The status of the board shown, for the header's pill and icon: cancellations (or diversions) among the
+  // flights listed, else delays, else on time; grey when nothing is tracked or listed.
+  _boardStatus(board) {
+    if (!board.tracked) return { key: "not_tracked_short", cls: "na" };
+    const max = Math.max(1, Math.min(50, Math.round(num(this._config.max_flights) ?? 6)));
+    const shown = board.flights.slice(0, max).filter((i) => !isPast(i, this._now()));
+    if (!shown.length) return { key: "no_flights_short", cls: "na" };
+    if (shown.some((i) => i.key === "canceled" || i.key === "diverted")) return { key: "cancellations", cls: "danger" };
+    if (shown.some((i) => i.key === "delayed")) return { key: "delays", cls: "warn" };
+    return { key: "status_on_time", cls: "ok" };
+  }
+
+  _statusPill(st) {
+    const text = this._t(st.key);
+    return `<span class="chip hpill ${st.cls}" title="${esc(text)}"><span class="dot"></span><span class="txt">${esc(text)}</span></span>`;
   }
 
   _banner(kind, inner, extraClass = "") {
@@ -2172,9 +2387,10 @@ class FlightBoardCard extends HTMLElement {
   _titleBlock(kind, board) {
     const a = this._airport();
     const stats = this._statsText(board);
-    return `<div class="badge">${svgIcon(kind === "dep" ? ICONS.departures : ICONS.arrivals)}${brandBadge()}</div>
+    const st = this._boardStatus(board);
+    return `<div class="badge ${st.cls}">${svgIcon(kind === "dep" ? ICONS.departures : ICONS.arrivals)}${brandBadge()}</div>
       <div class="titles">
-        <div class="name">${esc(a.title)}${a.code ? ` <span class="code">${esc(a.code)}</span>` : ""}</div>
+        <div class="trow"><div class="name">${esc(a.title)}${a.code ? ` <span class="code">${esc(a.code)}</span>` : ""}</div>${this._statusPill(st)}</div>
         ${stats.length ? `<div class="stats">${stats.map((s) => `<span>${esc(s)}</span>`).join("")}</div>` : ""}
       </div>`;
   }
@@ -2409,21 +2625,34 @@ class FlightBoardMiniCard extends FlightBoardCard {
     return this._t("in_hours", { h: Math.floor(m / 60), m: String(m % 60).padStart(2, "0") });
   }
 
+  // The sky of the compact view: the next flight (its time, then its status pill), else the airport with the
+  // board's status pill and why nothing is shown. `cls` is the status colour, also the header icon's.
   _next(kind, board) {
-    if (!board.entity) return `<div class="next"><div class="none">${esc(this._t("no_entities"))}</div></div>`;
-    if (!board.tracked) return `<div class="next"><div class="none">${esc(this._t("not_tracked"))}</div></div>`;
+    const empty = (key) => {
+      const st = this._boardStatus(board);
+      return {
+        cls: st.cls,
+        html: `<div class="next"><div class="l1"><span class="name">${esc(this._airport().title)}</span>${this._statusPill(st)}</div>
+          <div class="none" title="${esc(this._t(key))}">${esc(this._t(key))}</div></div>`,
+      };
+    };
+    if (!board.entity) return empty("no_entities");
+    if (!board.tracked) return empty("not_tracked");
     const now = this._now();
     // The next flight still to come (the first of the board when every one has gone).
     const info = board.flights.find((i) => !isPast(i, now) && (i.expected ?? 0) >= now - 300) || board.flights.find((i) => !isPast(i, now));
-    if (!info) return `<div class="next"><div class="none">${esc(this._t("no_flights"))}</div></div>`;
+    if (!info) return empty("no_flights");
     const f = info.f;
     const city = cityOf(f) || "—";
     const what = [flightLabel(f), this._until(info.expected)].filter(Boolean).join(" · ");
-    return `<div class="next" data-key="next-${esc(String(f.flight_id || flightLabel(f)))}">
+    return {
+      cls: info.cls,
+      html: `<div class="next" data-key="next-${esc(String(f.flight_id || flightLabel(f)))}">
       <div class="l1"><span class="clock">${esc(this._time(info.scheduled ?? info.expected))}</span>${this._pill(info, true)}</div>
       <div class="city">${esc(this._t(kind === "dep" ? "to_city" : "from_city", { city }))}</div>
       <div class="what">${esc(what)}</div>
-    </div>`;
+    </div>`,
+    };
   }
 
   _render() {
@@ -2432,11 +2661,12 @@ class FlightBoardMiniCard extends FlightBoardCard {
     if (!e.departures && !e.arrivals) return this._noEntities();
     const kind = this._activeTab();
     const board = this._board(kind);
-    const badge = `<div class="badge">${svgIcon(kind === "dep" ? ICONS.departures : ICONS.arrivals)}${brandBadge()}</div>`;
-    const inner = `<div class="head">${badge}${this._next(kind, board)}</div>`;
+    const next = this._next(kind, board);
+    const badge = `<div class="badge ${next.cls}">${svgIcon(kind === "dep" ? ICONS.departures : ICONS.arrivals)}${brandBadge()}</div>`;
+    const inner = `<div class="head">${badge}${next.html}</div>`;
     const header =
       this._config.illustration === false
-        ? `<div class="header plainmini">${badge}${this._next(kind, board)}${this._zoomButton("plain")}</div>`
+        ? `<div class="header plainmini">${badge}${next.html}${this._zoomButton("plain")}</div>`
         : this._banner(kind, `${inner}${this._zoomButton(this._night() ? "on-night" : "")}`);
     return `<style>${STYLE}${MINI_STYLE}${this._config.illustration === false ? ZOOM_STYLE : ""}</style>
       <ha-card>${header}</ha-card>`;
