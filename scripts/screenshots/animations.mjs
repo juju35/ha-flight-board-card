@@ -39,15 +39,16 @@ const GIFS = [
   { name: "takeoff", tag: "flight-board-card", width: 460, banner: true, config: {} },
   // Arrivals: the plane comes down, touches down and rolls out.
   { name: "landing", tag: "flight-board-card", width: 460, banner: true, config: { default_tab: "arrivals" } },
-  // Night, forced in both themes: stars, moon, lit windows and runway lights.
-  { name: "night", tag: "flight-board-card", width: 460, banner: true, config: { illustration_theme: "night" } },
+  // Night, forced: stars, moon, lit windows and runway lights. Light theme only: in the dark theme it would be the
+  // same GIF as takeoff-dark (one GIF per distinct state).
+  { name: "night", tag: "flight-board-card", width: 460, banner: true, config: { illustration_theme: "night" }, themes: ["light"] },
   // The mini card.
   { name: "mini", tag: "flight-board-mini-card", width: 380, banner: false, config: {} },
 ];
 
 const browser = await launch();
 for (const g of GIFS) {
-  for (const theme of ["light", "dark"]) {
+  for (const theme of g.themes ?? ["light", "dark"]) {
     const suffix = theme === "dark" ? "-dark" : "";
     const page = await openPage(browser, { theme, width: g.width, label: `${g.name}${suffix}` });
     await mountCard(page, { tag: g.tag, config: g.config, dark: theme === "dark" });

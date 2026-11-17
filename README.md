@@ -172,11 +172,9 @@ Landing (Arrivals; the night picture with a dark theme):
 |---|---|
 | <img src="https://raw.githubusercontent.com/juju35/ha-flight-board-card/main/screenshots/landing.gif" alt="landing animation" width="400"> | <img src="https://raw.githubusercontent.com/juju35/ha-flight-board-card/main/screenshots/landing-dark.gif" alt="landing animation, dark theme" width="400"> |
 
-Night (`illustration_theme: night`):
+Night (`illustration_theme: night`; with a dark theme, the take-off and landing animations above show it):
 
-| Light | Dark |
-|---|---|
-| <img src="https://raw.githubusercontent.com/juju35/ha-flight-board-card/main/screenshots/night.gif" alt="night animation" width="400"> | <img src="https://raw.githubusercontent.com/juju35/ha-flight-board-card/main/screenshots/night-dark.gif" alt="night animation, dark theme" width="400"> |
+<img src="https://raw.githubusercontent.com/juju35/ha-flight-board-card/main/screenshots/night.gif" alt="night animation" width="400">
 
 Mini card:
 
