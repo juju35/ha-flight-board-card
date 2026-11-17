@@ -39,8 +39,13 @@ const measure = async (cases) => {
   await page.addScriptTag({ content: src });
   const hass = mockHass();
   const out = await page.evaluate(
-    ({ cases, hass, THEMES }) =>
-      cases.map((c) => {
+    async ({ cases, hass, THEMES }) => {
+      // Sequential, each card measured two frames after it was mounted (the card fits its status pill on the
+      // resize observer's first notice, as in Home Assistant).
+      const all = [];
+      for (const c of cases)
+        all.push(
+          await (async () => {
         const box = document.createElement("div");
         box.style.cssText = `width:${c.width}px;${Object.entries(THEMES[c.theme]).map(([k, v]) => `${k}:${v}`).join(";")}`;
         document.body.appendChild(box);
@@ -52,6 +57,7 @@ const measure = async (cases) => {
         const click = (sel) => sr.querySelector(sel)?.dispatchEvent(new MouseEvent("click", { bubbles: true, composed: true, detail: 1 }));
         if (c.zoom) click(".zoom");
         if (c.detail) click(".row");
+        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
         const card = sr.querySelector("ha-card").getBoundingClientRect();
         const rect = (n) => n.getBoundingClientRect();
         const shown = (n) => n.getClientRects().length > 0 && getComputedStyle(n).visibility !== "hidden" && getComputedStyle(n).display !== "none";
@@ -91,10 +97,22 @@ const measure = async (cases) => {
         const block = pill?.closest(".titles, .next");
         const title = block?.querySelector(".name, .clock");
         const mid = (n) => (rect(n).top + rect(n).bottom) / 2;
+        // Whether the whole pill fits on the title row beside the title cut down to 4 characters (full card).
+        const tname = block?.matches(".titles") ? block.querySelector(".name") : null;
+        let fits = false;
+        if (tname && pill) {
+          const ctx = document.createElement("canvas").getContext("2d");
+          const cs = getComputedStyle(tname);
+          ctx.font = `${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
+          const four = Math.min(tname.scrollWidth, ctx.measureText(`${[...tname.textContent.trim()].slice(0, 4).join("")}…`).width);
+          fits = four + 8 + rect(pill).width <= rect(block).right - rect(tname).left - 1;
+        }
         const r = {
           outside,
           under,
           nameWidth: name ? rect(name).width : 0,
+          // A title shorter than that (an airport code) is whole.
+          nameFull: name ? name.scrollWidth : 0,
           ch: name ? parseFloat(getComputedStyle(name).fontSize) * 2 : 0,
           badge: badge ? [Math.round(rect(badge).width), Math.round(rect(badge).height)] : null,
           modalTop: modal ? rect(modal).top - card.top : null,
@@ -106,14 +124,17 @@ const measure = async (cases) => {
                 dotOnly: getComputedStyle(txt).position === "absolute",
                 inside: rect(pill).right <= rect(block).right + 0.5 && rect(pill).bottom <= card.bottom,
                 onTitleRow: Math.abs(mid(pill) - mid(title)) < 3,
-                share: rect(pill).width / rect(block).width,
+                fits,
                 label: pill.getAttribute("title"),
               }
             : null,
         };
         box.remove();
         return r;
-      }),
+          })(),
+        );
+      return all;
+    },
     { cases, hass, THEMES },
   );
   await page.close();
@@ -148,7 +169,7 @@ test("at their minimum width and wider, nothing leaves the card and no text lies
     const at = `${c.type} ${JSON.stringify(c.config)}${c.zoom ? " zoomed" : ""} ${c.lang} ${c.theme} ${c.width}px`;
     assert.deepEqual(r.outside, [], `outside the card: ${at}`);
     assert.deepEqual(r.under, [], `text under the scenery: ${at}`);
-    assert.ok(r.nameWidth >= r.ch, `title ${r.nameWidth.toFixed(0)} px: ${at}`);
+    assert.ok(r.nameWidth + 0.5 >= Math.min(r.ch, r.nameFull), `title ${r.nameWidth.toFixed(0)} px: ${at}`);
     assert.deepEqual(r.badge, [40, 40], `header icon: ${at}`);
   });
 });
@@ -170,7 +191,7 @@ test("every header has its status pill: whole label from 245 px, on the title ro
   const cases = [
     ...matrix([{ type: "flight-board-card", config: {} }, { type: "flight-board-card", config: { illustration: false } }], [200, 245, 300, 380, 460, 500]),
     ...matrix([{ type: "flight-board-mini-card", config: {} }, { type: "flight-board-mini-card", config: { illustration: false } }], [200, 245, 300, 380, 500]),
-    ...matrix([{ type: "flight-board-mini-card", config: {}, zoom: true }], [200, 245, 300, 500]),
+    ...matrix([{ type: "flight-board-mini-card", config: {}, zoom: true }], [200, 245, 300, 400, 460, 500]),
   ];
   const results = await measure(cases);
   results.forEach((r, i) => {
@@ -181,9 +202,11 @@ test("every header has its status pill: whole label from 245 px, on the title ro
     if (c.width <= 200) assert.ok(r.pill.dotOnly, `the dot alone at ${c.width} px: ${at}`);
     else {
       assert.ok(!r.pill.dotOnly && !r.pill.cut, `pill label « ${r.pill.label} » cut: ${at}`);
-      // On the title row of the full card, the pill leaves the title most of the room.
-      if (r.pill.onTitleRow && c.type === "flight-board-card") assert.ok(r.pill.share <= 0.53, `pill ${(r.pill.share * 100).toFixed(0)} % of the title block: ${at}`);
+      // Under the statistics only when it cannot sit beside the title cut down to 4 characters; on the title row of
+      // the full card ("RNS") from 380 px, scenery or not.
+      if (!r.pill.onTitleRow && r.pill.fits) assert.fail(`pill under the statistics although it fits beside the title: ${at}`);
+      if (c.lang === "en" && c.width >= 380 && (c.type === "flight-board-card" || c.zoom)) assert.ok(r.pill.onTitleRow, `pill not beside the title: ${at}`);
     }
-    assert.ok(r.nameWidth >= r.ch, `title ${r.nameWidth.toFixed(0)} px: ${at}`);
+    assert.ok(r.nameWidth + 0.5 >= Math.min(r.ch, r.nameFull), `title ${r.nameWidth.toFixed(0)} px: ${at}`);
   });
 });

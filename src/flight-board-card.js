@@ -1716,6 +1716,16 @@ const inDialog = (ev) => ev.composedPath().some((n) => ["ha-more-info-dialog", "
 // "A click elsewhere" is caught on the pointer, not only on the click event: on iOS (Safari and the companion app)
 // a tap on something that is not clickable sends no click to the page. The handler runs when the press and the
 // release are both outside the card; keyboard clicks (no click count) still go through the click event.
+// The width of an element's first four characters and an ellipsis, in its own font: the least a cut title keeps.
+let fourCtx;
+const fourChars = (el) => {
+  const cs = getComputedStyle(el);
+  fourCtx ??= document.createElement("canvas").getContext?.("2d");
+  if (!fourCtx) return 0;
+  fourCtx.font = `${cs.fontStyle} ${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
+  return fourCtx.measureText(`${[...el.textContent.trim()].slice(0, 4).join("")}\u2026`).width;
+};
+
 const watchOutside = (card, handler) => {
   let downOutside = false;
   const outside = (ev) => !ev.composedPath().includes(card);
@@ -1858,7 +1868,10 @@ const STYLE = `
   .banner.night { --sky-text: #ffffff; --sky-muted: rgba(255,255,255,.78);
                   background: linear-gradient(90deg, #1b2f52 0%, #15284a 36%, #0f1f3d 72%, #0a1830 100%); }
   .banner .scene { position: absolute; right: 0; bottom: var(--runway-h); height: calc(100% - var(--runway-h));
-                   width: min(calc((var(--banner-h, 90px) - var(--runway-h)) * 2.5), var(--scene-max, 58%)); overflow: hidden; }
+                   width: var(--scene-w); overflow: hidden; }
+  /* The scenery's width: up to 2.5 × its height and --scene-max of the banner; from 380 to 420 px it narrows a little
+     (down to 160 px), so that a short title keeps its status pill beside it. */
+  .banner { --scene-w: min(calc((var(--banner-h, 90px) - var(--runway-h)) * 2.5), var(--scene-max, 58%), max(160px, 100cqw - 220px)); }
   .runway { position: absolute; left: 0; right: 0; bottom: 0; height: var(--runway-h); background: #858c94;
             box-shadow: inset 0 1px 0 #6f767d, inset 0 -1px 0 #6f767d; }
   .night .runway { background: #2c323b; box-shadow: inset 0 1px 0 #1f242b, inset 0 -1px 0 #1f242b; }
@@ -1873,7 +1886,7 @@ const STYLE = `
   .night .runway .lights { background: radial-gradient(circle, #ffd27a 0 1.3px, rgba(255,210,122,.35) 1.6px, transparent 2.4px) 4px 0 / 16px 3px repeat-x; opacity: 1;
                            animation-name: fb-pulse-night; }
   .head { position: absolute; z-index: 1; left: 0; top: 0; bottom: var(--runway-h); box-sizing: border-box;
-          right: min(calc((var(--banner-h, 90px) - var(--runway-h)) * 2.5), var(--scene-max, 58%));
+          right: var(--scene-w, 0px);
           display: flex; align-items: center; gap: 10px; padding: 4px 8px 4px 14px; min-width: 0; color: var(--sky-text); }
   /* The header's text block is a container: the status pill leaves the title row when it lacks room. */
   .head, .header { container: fbhead / inline-size; }
@@ -1891,12 +1904,12 @@ const STYLE = `
   .banner .badge .brand { box-shadow: 0 0 0 1px rgba(13,42,69,.16), 0 1px 3px rgba(13,42,69,.18); }
   .badge .brand .mark { width: 100%; height: 100%; }
   .titles { flex: 1 1 0; min-width: 0; overflow: hidden; display: flex; flex-direction: column; }
-  /* The title row: the title, then the status pill right after it; the title gives way first, the pill keeps
-     room for 4 characters of it. */
+  /* The title row: the title, then the status pill right after it with its whole label; the title gives way first,
+     down to 4 characters. */
   .trow { display: flex; align-items: center; gap: 8px; min-width: 0; }
   .name { font-size: 16px; font-weight: 500; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
           flex: 0 1000 auto; min-width: 0; }
-  .trow .hpill { flex: 0 1 auto; max-width: min(52%, calc(100% - 3.4em - 8px)); }
+  .trow .hpill { flex: none; max-width: none; }
   .name .code { font-weight: 400; opacity: .7; }
   /* The statistics on two lines at most: a part that does not fit goes to a third line, clipped away; the "·" that
      starts a line sits in the negative margin, clipped too. */
@@ -1958,17 +1971,15 @@ const STYLE = `
   /* Pills on the sky: a frosted glass under the tint. */
   .banner .chip { background: color-mix(in srgb, var(--c) 18%, rgba(255,255,255,.78)); color: color-mix(in srgb, var(--c) 45%, #0d2a45); }
   .banner.night .chip { background: color-mix(in srgb, var(--c) 30%, rgba(8,18,38,.55)); color: color-mix(in srgb, var(--c) 35%, #ffffff); }
-  /* Not enough room beside the title (the header's text beside the scenery, or a narrow card): the pill goes to
-     its own line, under the statistics. */
-  @container fbhead (max-width: 250px) {
-    .titles > .trow { display: contents; }
-    .titles > .trow .hpill { order: 3; align-self: flex-start; max-width: 100%; margin-top: 2px; }
-    .titles .stats { order: 2; }
-  }
+  /* Not enough room beside the title for the whole pill (measured by the card, see _fitPill): the pill goes to its
+     own line, under the statistics. */
+  .titles.below > .trow { display: contents; }
+  .titles.below > .trow .hpill { order: 3; align-self: flex-start; max-width: 100%; margin-top: 2px; }
+  .titles.below .stats { order: 2; }
   /* Very narrow: the dot alone, back on the title row (the label stays in its tooltip and for screen readers). */
   @container fbcard (max-width: 200px) {
-    .titles > .trow { display: flex; }
-    .titles > .trow .hpill { order: 0; align-self: center; margin-top: 0; }
+    .titles.below > .trow { display: flex; }
+    .titles.below > .trow .hpill { order: 0; align-self: center; margin-top: 0; }
     .hpill { padding: 0; background: none !important; overflow: visible; }
     .hpill .txt { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
   }
@@ -2042,6 +2053,8 @@ const MINI_STYLE = `
   @container (max-width: 280px) { .banner .scene { display: none; } .head { right: 0; padding-right: 34px; } }
   /* A narrow mini card: a smaller clock leaves its status pill whole. */
   @container fbcard (max-width: 260px) { .next .clock { font-size: 20px; } .next .l1 { gap: 6px; } }
+  /* Without the illustration, tighter margins too: the next flight's status keeps its whole label beside the clock. */
+  @container fbcard (max-width: 260px) { .header.plainmini { gap: 6px; padding-left: 10px; padding-right: 38px; } }
 `;
 // The zoomed mini card: the full card, with the detail button over its banner.
 const ZOOM_STYLE = `
@@ -2129,6 +2142,18 @@ class FlightBoardCard extends HTMLElement {
 
   connectedCallback() {
     (this._outsideWatch ??= watchOutside(this, (ev) => this._onOutside(ev))).on();
+    // A new width (or the web font loaded): the status pill is fitted again, in the next frame.
+    if (typeof ResizeObserver === "function") {
+      this._resize ??= new ResizeObserver((entries) => {
+        const w = Math.round(entries.at(-1).contentRect.width);
+        if (w === this._fitWidth) return;
+        this._fitWidth = w;
+        cancelAnimationFrame(this._fitFrame);
+        this._fitFrame = requestAnimationFrame(() => this._fitPill());
+      });
+      this._resize.observe(this);
+    }
+    document.fonts?.ready?.then(() => this._fitPill());
     // The times ("in 23 min", boarding, past flights) follow the clock: checked every 30 s.
     clearInterval(this._timer);
     this._timer = setInterval(() => this._hass && this._config && (this.hass = this._hass), 30000);
@@ -2138,9 +2163,28 @@ class FlightBoardCard extends HTMLElement {
   disconnectedCallback() {
     this._outsideWatch?.off();
     clearInterval(this._timer);
+    this._resize?.disconnect();
+    this._fitWidth = null;
     // Left (another view, a conditional card hidden): the popup closes without anything else.
     this._detail = null;
     window.removeEventListener("keydown", this._onKey);
+  }
+
+  // The banner's status pill goes right after the title when its whole label fits there beside a title cut down to
+  // four characters; otherwise it takes a line of its own under the subtitle (.titles.below). Measured (in fractional
+  // pixels), so that a short title keeps its pill beside it whatever room the picture leaves.
+  _fitPill() {
+    for (const t of this.shadowRoot?.querySelectorAll?.(".titles") || []) {
+      const chip = t.querySelector(".trow > .chip");
+      if (!chip?.getBoundingClientRect) continue;
+      t.classList.remove("below");
+      const row = chip.parentElement;
+      const name = row.querySelector(".name");
+      const shown = name && getComputedStyle(name).display !== "none";
+      const gap = parseFloat(getComputedStyle(row).columnGap) || 0;
+      const title = shown ? Math.min(name.scrollWidth, Math.max(parseFloat(getComputedStyle(name).minWidth) || 0, fourChars(name))) + gap : 0;
+      if (title + chip.getBoundingClientRect().width > row.getBoundingClientRect().width + 0.5) t.classList.add("below");
+    }
   }
 
   _t(key, vars) {
@@ -2197,6 +2241,7 @@ class FlightBoardCard extends HTMLElement {
       this._html = html;
       morph(this.shadowRoot, html);
     }
+    this._fitPill();
   }
 
   // Night illustration: forced by illustration_theme, else the sun below the horizon or the dark theme (a dark
