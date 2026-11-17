@@ -3,7 +3,7 @@
 ## 1.1.1 - 2026-11-17
 
 ### Fixes
-- **Uniform header height**: the illustrated header is now 90 px high on both cards (was 92 px on the full card and 80 px on the mini card), the same height as the other illustrated cards, so that headers line up on a dashboard.
+- **Uniform header height**: the illustrated header is now 90 px high on both cards (was 92 px on the full card and 80 px on the mini card), the same height as the other illustrated cards, so that headers line up on a dashboard. The runway strip is 10 px high on both cards (was 12 px on the full card), the same thickness as the ground strip of the other cards.
 
 ## 1.1.0 - 2026-11-14
 

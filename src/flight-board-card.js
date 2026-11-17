@@ -1764,7 +1764,7 @@ const STYLE = `
   .warning { padding: 16px; color: color-mix(in srgb, var(--fb-warn) 40%, var(--primary-text-color, #212121)); }
 
   /* ── Illustrated header ── */
-  .banner { position: relative; height: var(--banner-h, 90px); overflow: hidden; --runway-h: 12px;
+  .banner { position: relative; height: var(--banner-h, 90px); overflow: hidden; --runway-h: 10px;
             --sky-text: #0d2a45; --sky-muted: #3b5b78;
             background: linear-gradient(90deg, #f1f8ff 0%, #e2f1fd 34%, #b9def8 70%, #9fd0f3 100%); }
   .banner.night { --sky-text: #ffffff; --sky-muted: rgba(255,255,255,.78);
