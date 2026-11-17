@@ -1,6 +1,6 @@
 {
   "name": "ha-flight-board-card",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Animated airport departures and arrivals board card for Home Assistant (FlightRadar24 integration).",
   "repository": {
     "type": "git",
