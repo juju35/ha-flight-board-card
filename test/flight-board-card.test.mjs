@@ -197,12 +197,13 @@ test("an airport not tracked yet, and no FlightRadar24 entity at all", () => {
   assert.match(card(fb.FlightBoardCard, {}, { states: {}, language: "en" })._render(), /No FlightRadar24 airport sensors found/);
 });
 
-test("night illustration: forced, else the sun below the horizon or the dark theme", () => {
+test("night illustration: forced, else the dark theme alone", () => {
   assert.match(card(fb.FlightBoardCard, { illustration_theme: "night" })._render(), /class="banner night"/);
   assert.match(card(fb.FlightBoardCard, { illustration_theme: "night" }, mockHass({ sun: "above_horizon" }))._render(), /banner night/);
   assert.doesNotMatch(card(fb.FlightBoardCard, { illustration_theme: "day" }, mockHass({ dark: true }))._render(), /banner night/);
   assert.doesNotMatch(card(fb.FlightBoardCard, { illustration_theme: "day" }, mockHass({ sun: "below_horizon", dark: true }))._render(), /banner night/);
-  assert.match(card(fb.FlightBoardCard, {}, mockHass({ sun: "below_horizon" }))._render(), /banner night/);
+  assert.doesNotMatch(card(fb.FlightBoardCard, {}, mockHass({ sun: "below_horizon" }))._render(), /banner night/);
+  assert.match(card(fb.FlightBoardCard, {}, mockHass({ sun: "below_horizon", dark: true }))._render(), /banner night/);
   assert.match(card(fb.FlightBoardCard, {}, mockHass({ dark: true }))._render(), /banner night/);
   assert.doesNotMatch(card(fb.FlightBoardCard, {}, mockHass({ sun: "above_horizon" }))._render(), /banner night/);
   assert.doesNotMatch(card(fb.FlightBoardCard, {}, mockHass())._render(), /banner night/);

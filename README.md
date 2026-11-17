@@ -30,7 +30,7 @@ The cards are built on top of the [FlightRadar24 integration](https://github.com
 - Two cards: a full **Flight Board Card** and a compact **Flight Board Mini Card**, of type `custom:flight-board-card` and `custom:flight-board-mini-card`
 - The illustration is the header: sky, hills, a terminal with its windows, a control tower with its blinking red beacon, an orange windsock waving in the wind, the sun or the moon, drifting clouds, and a runway with its markings and pulsing edge lights
 - A detailed plane (white fuselage, blue cheatline, orange tail, windows, engine) rolls down the runway and **takes off** on the Departures tab, or comes down, **lands** and rolls out on the Arrivals tab; the animation starts again when you switch tabs
-- **Night mode** of the illustration: midnight-blue sky, stars, moon, the terminal and the tower lit in amber, the runway lights fully on, white header texts; shown when the sun (`sun.sun`) is below the horizon or when Home Assistant uses a dark theme, or forced with `illustration_theme`
+- **Night mode** of the illustration: midnight-blue sky, stars, moon, the terminal and the tower lit in amber, the runway lights fully on, white header texts; shown when Home Assistant uses a dark theme (a light theme keeps the day picture after sunset), or forced with `illustration_theme`
 - Header with the airport code (or your title) and the board's statistics: « 7 flights · 92 % on time · avg +8 min », from the integration's statistics sensors when they have values, else computed from the listed flights
 - **Status pill** on the title row of the header, in the colour of the header icon: **On time** (green), **Delays** (orange) or **Cancellations** (red, a canceled or diverted flight) among the flights listed, **No flights** or **Not tracked** (grey); when the title lacks room it goes to its own line under the statistics, and on a very narrow card only its dot shows
 - **Departures / Arrivals** text tabs right under the header, the active one underlined
@@ -148,7 +148,7 @@ zoom: true
 | `show_aircraft` | both | `false` | The aircraft type after the flight number |
 | `show_stats` | both | `true` | The statistics line of the header (flights, on-time share, average delay) |
 | `illustration` | both | `true` | The animated illustration as header; `false` for a classic header with a round icon |
-| `illustration_theme` | both | `auto` | `auto` (night when `sun.sun` is below the horizon or Home Assistant uses a dark theme), `day` or `night` |
+| `illustration_theme` | both | `auto` | `auto` (follows the Home Assistant theme: night with a dark theme, day with a light theme), `day` or `night` |
 | `zoom` | mini | `true` | Detail button at the top right: unfolds the full board and back (`false` removes it). The full card's options above apply to the unfolded view and are also set in the mini card's visual editor |
 | `language` | both | Auto | Force language: `en`, `fr`, `de`, `es`, `sr`, `sr-Latn`, `it`, `nl`, `pt`, `pl`, `ro`, `da`, `sv`, `bg`, `ru`, `uk`, `hu`, `sk`, `cs`, `sl`, `lv` or `el` (auto-detects from HA settings) |
 

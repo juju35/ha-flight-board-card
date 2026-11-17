@@ -2256,7 +2256,7 @@ class FlightBoardCard extends HTMLElement {
     return tabs.includes(def) ? def : tabs[0];
   }
 
-  // What the render depends on: language, dark mode, the sun, the airport entities and the minute.
+  // What the render depends on: language, dark mode, the airport entities and the minute.
   _signature() {
     const h = this._hass;
     const e = discover(h, this._config);
@@ -2264,7 +2264,6 @@ class FlightBoardCard extends HTMLElement {
       h.language,
       h.locale,
       h.themes?.darkMode,
-      h.states["sun.sun"]?.state,
       ...Object.values(e).map((id) => h.states[id]),
       Math.floor(Date.now() / 60000),
     ];
@@ -2281,13 +2280,13 @@ class FlightBoardCard extends HTMLElement {
     this._fitPill();
   }
 
-  // Night illustration: forced by illustration_theme, else the sun below the horizon or the dark theme (a dark
-  // dashboard by day gets the night picture too).
+  // Night illustration: forced by illustration_theme, else Home Assistant's dark mode alone (a light theme keeps the
+  // day picture after sunset).
   _night() {
     const mode = this._config.illustration_theme;
     if (mode === "night") return true;
     if (mode === "day") return false;
-    return this._s("sun.sun")?.state === "below_horizon" || !!this._hass?.themes?.darkMode;
+    return !!this._hass?.themes?.darkMode;
   }
 
   // Formats a Unix time (seconds) in the time zone and the 12/24 h setting of Home Assistant; the weekday when
