@@ -1716,14 +1716,11 @@ const inDialog = (ev) => ev.composedPath().some((n) => ["ha-more-info-dialog", "
 // "A click elsewhere" is caught on the pointer, not only on the click event: on iOS (Safari and the companion app)
 // a tap on something that is not clickable sends no click to the page. The handler runs when the press and the
 // release are both outside the card; keyboard clicks (no click count) still go through the click event.
-// The width of an element's first four characters and an ellipsis, in its own font: the least a cut title keeps.
-let fourCtx;
-const fourChars = (el) => {
-  const cs = getComputedStyle(el);
-  fourCtx ??= document.createElement("canvas").getContext?.("2d");
-  if (!fourCtx) return 0;
-  fourCtx.font = `${cs.fontStyle} ${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
-  return fourCtx.measureText(`${[...el.textContent.trim()].slice(0, 4).join("")}\u2026`).width;
+// The width of an element's whole text in fractional pixels, even while an ellipsis cuts it.
+const textWidth = (el) => {
+  const range = document.createRange();
+  range.selectNodeContents(el);
+  return range.getBoundingClientRect().width || el.scrollWidth;
 };
 
 const watchOutside = (card, handler) => {
@@ -1904,8 +1901,7 @@ const STYLE = `
   .banner .badge .brand { box-shadow: 0 0 0 1px rgba(13,42,69,.16), 0 1px 3px rgba(13,42,69,.18); }
   .badge .brand .mark { width: 100%; height: 100%; }
   .titles { flex: 1 1 0; min-width: 0; overflow: hidden; display: flex; flex-direction: column; }
-  /* The title row: the title, then the status pill right after it with its whole label; the title gives way first,
-     down to 4 characters. */
+  /* The title row: the title, then the status pill right after it with its whole label (placed by _fitPill). */
   .trow { display: flex; align-items: center; gap: 8px; min-width: 0; }
   .name { font-size: 16px; font-weight: 500; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
           flex: 0 1000 auto; min-width: 0; }
@@ -1971,11 +1967,15 @@ const STYLE = `
   /* Pills on the sky: a frosted glass under the tint. */
   .banner .chip { background: color-mix(in srgb, var(--c) 18%, rgba(255,255,255,.78)); color: color-mix(in srgb, var(--c) 45%, #0d2a45); }
   .banner.night .chip { background: color-mix(in srgb, var(--c) 30%, rgba(8,18,38,.55)); color: color-mix(in srgb, var(--c) 35%, #ffffff); }
-  /* Not enough room beside the title for the whole pill (measured by the card, see _fitPill): the pill goes to its
-     own line, under the statistics. */
+  /* The whole title and the whole pill do not fit side by side (measured by the card, see _fitPill): the pill goes to
+     its own line, under the statistics, kept to one line; if that does not fit the header either, the dot alone. */
   .titles.below > .trow { display: contents; }
   .titles.below > .trow .hpill { order: 3; align-self: flex-start; max-width: 100%; margin-top: 2px; }
-  .titles.below .stats { order: 2; }
+  .titles.below .stats { order: 2; max-height: 16px; }
+  .titles.dot-only > .trow { display: flex; }
+  .titles.dot-only > .trow .hpill { order: 0; align-self: center; margin-top: 0; }
+  :is(.titles, .next).dot-only .hpill { padding: 0; background: none !important; overflow: visible; }
+  :is(.titles, .next).dot-only .hpill .txt { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
   /* Very narrow: the dot alone, back on the title row (the label stays in its tooltip and for screen readers). */
   @container fbcard (max-width: 200px) {
     .titles.below > .trow { display: flex; }
@@ -2036,8 +2036,16 @@ const MINI_STYLE = `
   .next { display: flex; flex-direction: column; gap: 1px; flex: 1 1 0; min-width: 0; }
   .next .l1 { display: flex; align-items: center; gap: 8px; min-width: 0; white-space: nowrap; }
   .next .clock { font-size: 22px; font-weight: 600; line-height: 26px; font-variant-numeric: tabular-nums; flex: none; }
-  .next .chip { flex: 0 1 auto; }
-  .next .l1 .name + .hpill { max-width: calc(100% - 3.4em - 8px); }
+  .next .l1 > .chip { flex: none; max-width: none; }
+  .next .l1 > .name { flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+  /* The time (or the airport) and the whole pill do not fit side by side (see _fitPill): the pill under the flight,
+     its lines kept to one; if that does not fit the header either, the dot alone beside the time. */
+  .next.below > .l1 { display: contents; }
+  .next.below > :not(.l1) { order: 2; }
+  .next.below > .l1 > .chip { order: 3; align-self: flex-start; margin-top: 2px; }
+  .next.below .none { -webkit-line-clamp: 1; }
+  .next.dot-only > .l1 { display: flex; }
+  .next.dot-only > .l1 > .chip { order: 0; align-self: center; margin-top: 0; }
   .next .city { font-size: 13px; line-height: 17px; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .next .what { font-size: 12px; line-height: 16px; color: var(--sky-muted); min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .header { --sky-muted: var(--secondary-text-color); }
@@ -2170,20 +2178,49 @@ class FlightBoardCard extends HTMLElement {
     window.removeEventListener("keydown", this._onKey);
   }
 
-  // The banner's status pill goes right after the title when its whole label fits there beside a title cut down to
-  // four characters; otherwise it takes a line of its own under the subtitle (.titles.below). Measured (in fractional
-  // pixels), so that a short title keeps its pill beside it whatever room the picture leaves.
+  // The header's status pill goes right after the title, on its row, only while the title stays whole and the
+  // pill's whole label fits beside it; otherwise it takes a line of its own under the subtitle (.below), the title
+  // whole on its row (cut only when it does not fit alone). There, in the banner, the subtitle keeps one line; if the
+  // text still does not fit above the ground strip, the pill keeps its dot alone (.dot-only, its label in its tooltip
+  // and for screen readers). Measured after each render and on each new width, whatever the language: no fixed
+  // width threshold.
   _fitPill() {
-    for (const t of this.shadowRoot?.querySelectorAll?.(".titles") || []) {
-      const chip = t.querySelector(".trow > .chip");
-      if (!chip?.getBoundingClientRect) continue;
-      t.classList.remove("below");
-      const row = chip.parentElement;
-      const name = row.querySelector(".name");
-      const shown = name && getComputedStyle(name).display !== "none";
+    if (!this.isConnected) return;
+    for (const t of this.shadowRoot?.querySelectorAll?.(".titles, .next") || []) {
+      const row = t.querySelector(".trow, .l1");
+      const pills = row ? [...row.children].filter((n) => n.matches(".chip")) : [];
+      if (!pills.length || !pills[0].getBoundingClientRect) continue;
+      t.classList.remove("below", "dot-only");
+      const name = row.querySelector(".name, .clock");
       const gap = parseFloat(getComputedStyle(row).columnGap) || 0;
-      const title = shown ? Math.min(name.scrollWidth, Math.max(parseFloat(getComputedStyle(name).minWidth) || 0, fourChars(name))) + gap : 0;
-      if (title + chip.getBoundingClientRect().width > row.getBoundingClientRect().width + 0.5) t.classList.add("below");
+      const title = name && getComputedStyle(name).display !== "none" ? textWidth(name) + gap : 0;
+      const need = pills.reduce((w, p) => w + p.getBoundingClientRect().width + gap, title - gap);
+      if (need > t.getBoundingClientRect().width - 0.5) {
+        t.classList.add("below");
+        const banner = t.closest(".banner");
+        if (banner) {
+          const b = banner.getBoundingClientRect();
+          // Each element as it shows: its box cut by its ancestors that hide their overflow (a clamped line).
+          const out = [...t.querySelectorAll("*")].some((n) => {
+            let { top, bottom } = n.getBoundingClientRect();
+            for (let p = n.parentElement; p && p !== t; p = p.parentElement) {
+              if (getComputedStyle(p).overflowY === "visible") continue;
+              top = Math.max(top, p.getBoundingClientRect().top);
+              bottom = Math.min(bottom, p.getBoundingClientRect().bottom);
+            }
+            return bottom - top > 0.5 && (top < b.top - 0.5 || bottom > b.bottom - (parseFloat(getComputedStyle(banner).getPropertyValue("--runway-h")) || 10) + 0.5);
+          });
+          if (out) t.classList.add("dot-only");
+        }
+      }
+      // A subtitle cut by its ellipsis keeps its whole text in its tooltip.
+      const s = t.querySelector(".none");
+      if (s && (!s.hasAttribute("title") || s.dataset.fit)) {
+        const cut = s.scrollWidth > s.clientWidth + 1;
+        s.toggleAttribute("data-fit", cut);
+        if (cut) s.title = s.textContent.trim();
+        else s.removeAttribute("title");
+      }
     }
   }
 

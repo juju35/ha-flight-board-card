@@ -97,16 +97,46 @@ const measure = async (cases) => {
         const block = pill?.closest(".titles, .next");
         const title = block?.querySelector(".name, .clock");
         const mid = (n) => (rect(n).top + rect(n).bottom) / 2;
-        // Whether the whole pill fits on the title row beside the title cut down to 4 characters (full card).
-        const tname = block?.matches(".titles") ? block.querySelector(".name") : null;
+        // Whether the whole pill fits on the title row beside the whole title (or time), and whether that title is
+        // whole (no ellipsis).
+        const tname = block?.querySelector(".trow > .name, .l1 > .name, .l1 > .clock");
+        const whole = (n) => {
+          const range = document.createRange();
+          range.selectNodeContents(n);
+          return range.getBoundingClientRect().width;
+        };
         let fits = false;
+        let nameWhole = true;
         if (tname && pill) {
-          const ctx = document.createElement("canvas").getContext("2d");
-          const cs = getComputedStyle(tname);
-          ctx.font = `${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
-          const four = Math.min(tname.scrollWidth, ctx.measureText(`${[...tname.textContent.trim()].slice(0, 4).join("")}…`).width);
-          fits = four + 8 + rect(pill).width <= rect(block).right - rect(tname).left - 1;
+          const label = pill.cloneNode(true);
+          label.style.cssText = "position:absolute;visibility:hidden;padding:1px 8px";
+          label.querySelector(".txt").style.cssText = "position:static";
+          pill.parentElement.appendChild(label);
+          fits = whole(tname) + 8 + rect(label).width <= rect(block).right - rect(tname).left - 1;
+          label.remove();
+          nameWhole = whole(tname) <= rect(tname).width + 0.05;
         }
+        // Nothing of the banner's text under its runway strip or above it.
+        const bannerEl = sr.querySelector(".banner");
+        // What shows of an element vertically: its box cut by its ancestors that hide their overflow.
+        const seen = (n) => {
+          let { top, bottom } = rect(n);
+          for (let p = n.parentElement; p && p !== bannerEl; p = p.parentElement)
+            if (getComputedStyle(p).overflowY !== "visible") {
+              top = Math.max(top, rect(p).top);
+              bottom = Math.min(bottom, rect(p).bottom);
+            }
+          return { top, bottom };
+        };
+        const low = bannerEl
+          ? [...bannerEl.querySelectorAll(".head *")]
+              .filter((n) => shown(n) && n.children.length === 0 && n.textContent.trim())
+              .filter((n) => {
+                const v = seen(n);
+                return v.bottom - v.top > 0.5 && (v.bottom > rect(bannerEl).bottom - 10 + 0.5 || v.top < rect(bannerEl).top - 0.5);
+              })
+              .map((n) => n.textContent.trim())
+          : [];
         const r = {
           outside,
           under,
@@ -125,6 +155,8 @@ const measure = async (cases) => {
                 inside: rect(pill).right <= rect(block).right + 0.5 && rect(pill).bottom <= card.bottom,
                 onTitleRow: Math.abs(mid(pill) - mid(title)) < 3,
                 fits,
+                nameWhole,
+                low,
                 label: pill.getAttribute("title"),
               }
             : null,
@@ -142,7 +174,7 @@ const measure = async (cases) => {
   return out;
 };
 
-const LANGS = ["en", "de", "el", "sr", "lv", "hu", "pt"];
+const LANGS = ["en", "fr", "de", "el", "ru", "sr", "lv", "hu", "pt"];
 const matrix = (variants, widths) => {
   const cases = [];
   for (const v of variants) for (const lang of LANGS) for (const theme of ["light", "dark"]) for (const width of widths) cases.push({ ...v, lang, theme, width });
@@ -186,7 +218,7 @@ test("the flight popup opens at the top of the card and stays in it", { timeout:
   });
 });
 
-test("every header has its status pill: whole label from 245 px, on the title row when it fits, the dot alone at 200 px", { timeout: 120000 }, async (t) => {
+test("every header has its status pill: on the title row only beside a whole title, else under the subtitle, its label whole or its dot alone, never under the runway", { timeout: 180000 }, async (t) => {
   if (skip) return t.skip(skip);
   const cases = [
     ...matrix([{ type: "flight-board-card", config: {} }, { type: "flight-board-card", config: { illustration: false } }], [200, 245, 300, 380, 460, 500]),
@@ -199,11 +231,13 @@ test("every header has its status pill: whole label from 245 px, on the title ro
     const at = `${c.type} ${JSON.stringify(c.config)}${c.zoom ? " zoomed" : ""} ${c.lang} ${c.theme} ${c.width}px`;
     assert.ok(r.pill, `no status pill: ${at}`);
     assert.ok(r.pill.inside, `pill outside its block: ${at}`);
+    assert.deepEqual(r.pill.low, [], `text under the runway strip or above the banner: ${at}`);
     if (c.width <= 200) assert.ok(r.pill.dotOnly, `the dot alone at ${c.width} px: ${at}`);
     else {
-      assert.ok(!r.pill.dotOnly && !r.pill.cut, `pill label « ${r.pill.label} » cut: ${at}`);
-      // Under the statistics only when it cannot sit beside the title cut down to 4 characters; on the title row of
-      // the full card ("RNS") from 380 px, scenery or not.
+      assert.ok(r.pill.dotOnly || !r.pill.cut, `pill label « ${r.pill.label} » cut: ${at}`);
+      // Beside the title only while the title stays whole; under the subtitle only when the whole title and the whole
+      // pill do not fit side by side; on the title row of the full card ("RNS") from 380 px, scenery or not.
+      if (r.pill.onTitleRow && !r.pill.dotOnly) assert.ok(r.pill.nameWhole, `title cut beside the pill: ${at}`);
       if (!r.pill.onTitleRow && r.pill.fits) assert.fail(`pill under the statistics although it fits beside the title: ${at}`);
       if (c.lang === "en" && c.width >= 380 && (c.type === "flight-board-card" || c.zoom)) assert.ok(r.pill.onTitleRow, `pill not beside the title: ${at}`);
     }
