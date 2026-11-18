@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.2 - 2026-11-18
+
+### Fixes
+- Editor: the `auto` illustration theme label no longer mentions the sun.
+
 ## 1.2.1 - 2026-11-18
 
 ### Fixes
