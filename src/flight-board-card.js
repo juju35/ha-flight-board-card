@@ -1578,7 +1578,12 @@ const discover = (hass, config = {}) => {
   const entities = hass?.entities;
   const key = [config.departures_entity, config.arrivals_entity, config.airport_entity].join("|");
   const cached = _found.get(key);
-  if (cached && cached.entities === entities && cached.count === Object.keys(states).length) return cached.out;
+  // The same states object (several calls in one render): no need to count the entities again.
+  if (cached && cached.entities === entities && cached.states === states) return cached.out;
+  if (cached && cached.entities === entities && cached.count === Object.keys(states).length) {
+    cached.states = states;
+    return cached.out;
+  }
   const out = {};
   const reg = Object.values(entities || {}).filter((e) => e && e.platform === PLATFORM && e.translation_key);
   const anchor = [config.departures_entity, config.arrivals_entity].map((id) => entities?.[id]).find(Boolean);
@@ -1591,7 +1596,7 @@ const discover = (hass, config = {}) => {
   if (config.departures_entity) out.departures = config.departures_entity;
   if (config.arrivals_entity) out.arrivals = config.arrivals_entity;
   if (config.airport_entity) out.track = config.airport_entity;
-  _found.set(key, { entities, count: Object.keys(states).length, out });
+  _found.set(key, { entities, states, count: Object.keys(states).length, out });
   return out;
 };
 
@@ -2053,7 +2058,7 @@ const MINI_STYLE = `
   .next .l1 .name { font-size: 16px; line-height: 26px; }
   .zoom { all: unset; position: absolute; z-index: 2; top: 5px; right: 5px; cursor: pointer; width: 24px; height: 24px; border-radius: 50%;
           display: grid; place-items: center; color: #33506b; background: rgba(255,255,255,.55); box-shadow: inset 0 0 0 1px rgba(255,255,255,.7);
-          backdrop-filter: blur(4px); }
+          -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
   .night .zoom, .zoom.on-night { color: #ffffff; background: rgba(255,255,255,.12); box-shadow: inset 0 0 0 1px rgba(255,255,255,.2); }
   .zoom:hover { background: rgba(255,255,255,.75); }
   .night .zoom:hover, .zoom.on-night:hover { background: rgba(255,255,255,.22); }
@@ -2068,7 +2073,7 @@ const MINI_STYLE = `
 const ZOOM_STYLE = `
   .zoom { all: unset; position: absolute; z-index: 2; top: 5px; right: 5px; cursor: pointer; width: 24px; height: 24px; border-radius: 50%;
           display: grid; place-items: center; color: #33506b; background: rgba(255,255,255,.55); box-shadow: inset 0 0 0 1px rgba(255,255,255,.7);
-          backdrop-filter: blur(4px); }
+          -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
   .zoom:hover { background: rgba(255,255,255,.75); }
   .zoom.on-night { color: #ffffff; background: rgba(255,255,255,.12); box-shadow: inset 0 0 0 1px rgba(255,255,255,.2); }
   .zoom.on-night:hover { background: rgba(255,255,255,.22); }
@@ -2171,6 +2176,7 @@ class FlightBoardCard extends HTMLElement {
   disconnectedCallback() {
     this._outsideWatch?.off();
     clearInterval(this._timer);
+    cancelAnimationFrame(this._fitFrame);
     this._resize?.disconnect();
     this._fitWidth = null;
     // Left (another view, a conditional card hidden): the popup closes without anything else.
@@ -2771,7 +2777,12 @@ class FlightBoardCardEditor extends HTMLElement {
     for (const k of OFF_BY_DEFAULT) if (data[k] === undefined) data[k] = false;
     this._form.hass = this._hass;
     this._form.data = data;
-    this._form.schema = this._schema();
+    // The schema only depends on the language of its labels: not rebuilt (nor ha-form re-rendered) on every hass update.
+    const l = lang(this._hass, this._config);
+    if (this._schemaLang !== l) {
+      this._schemaLang = l;
+      this._form.schema = this._schema();
+    }
   }
 }
 

@@ -291,6 +291,41 @@ test("the editors keep the YAML minimal and the mini card's editor has the full 
   assert.ok(miniNames.includes("zoom") && !full.includes("zoom"));
 });
 
+test("the editor builds its schema again only when the language of its labels changes", () => {
+  const ed = new fb.FlightBoardCardEditor();
+  let form;
+  fb.document.createElement = (tag) => {
+    form = { tag, addEventListener() {} };
+    return form;
+  };
+  ed.appendChild = () => {};
+  ed.setConfig({ type: "custom:flight-board-card" });
+  ed.hass = mockHass();
+  const first = form.schema;
+  ed.hass = mockHass();
+  assert.equal(form.schema, first);
+  ed.setConfig({ type: "custom:flight-board-card", language: "fr" });
+  assert.notEqual(form.schema, first);
+});
+
+test("discovery: repeated calls on the same states object do not count the entities again", () => {
+  const hass = mockHass();
+  const first = fb.discover(hass, {});
+  let counted = 0;
+  const states = new Proxy(hass.states, {
+    ownKeys(target) {
+      counted++;
+      return Reflect.ownKeys(target);
+    },
+  });
+  const h = { ...hass, states };
+  assert.deepEqual({ ...fb.discover(h, {}) }, { ...first });
+  assert.equal(counted, 1);
+  fb.discover(h, {});
+  fb.discover(h, {});
+  assert.equal(counted, 1);
+});
+
 const LANGS = ["en", "fr", "de", "es", "sr", "sr-Latn", "it", "nl", "pt", "pl", "ro", "da", "sv", "bg", "ru", "uk", "hu", "sk", "cs", "sl", "lv", "el"];
 const vars = (s) => s.match(/\{\w+\}/g)?.sort() ?? [];
 
