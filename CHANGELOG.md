@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.2.3 - 2026-11-20
+
+### Fixes
+- The mini card's detail button keeps its frosted glass on older Safari / iOS (`-webkit-backdrop-filter`).
+- A pending status-pill fit is cancelled when the card leaves the page.
+
+### Performance
+- The entity discovery no longer counts every entity of Home Assistant several times per render: repeated calls on the same states are served from its cache.
+- The visual editor builds its form schema again only when the language of its labels changes, not on every Home Assistant update.
+
 ## 1.2.2 - 2026-11-18
 
 ### Fixes
