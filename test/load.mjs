@@ -1,10 +1,13 @@
 // Test loader: evaluates the card source (a plain script, as shipped in dist/) in an isolated context
 // with minimal browser stubs, and returns the requested top-level bindings. The bundle is unchanged.
 import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 import vm from "node:vm";
 
+const SRC = new URL("../src/flight-board-card.js", import.meta.url);
+
 export const load = (names) => {
-  const src = readFileSync(new URL("../src/flight-board-card.js", import.meta.url), "utf8");
+  const src = readFileSync(SRC, "utf8");
   class HTMLElement {
     attachShadow() {
       // Listeners kept by type, so tests can dispatch events to them.
@@ -63,5 +66,7 @@ export const load = (names) => {
     Date,
   };
   vm.createContext(context);
-  return vm.runInContext(`${src}\n;({ ${names.join(", ")} })`, context);
+  // Evaluated under the source file's path, so `node --test --experimental-test-coverage` (npm run coverage) counts
+  // the card's own lines; the names the tests need are read on a line after the source's last.
+  return vm.runInContext(`${src}\n;({ ${names.join(", ")} })`, context, { filename: fileURLToPath(SRC) });
 };

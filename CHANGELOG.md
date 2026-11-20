@@ -10,6 +10,9 @@
 - The entity discovery no longer counts every entity of Home Assistant several times per render: repeated calls on the same states are served from its cache.
 - The visual editor builds its form schema again only when the language of its labels changes, not on every Home Assistant update.
 
+### Maintenance
+- Tests: the card's source is evaluated under its own path, so `npm run coverage` (run by CI) measures the card itself (94 % of lines, 81 % of branches).
+
 ## 1.2.2 - 2026-11-18
 
 ### Fixes

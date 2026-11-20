@@ -69,8 +69,10 @@ jobs:
       - name: Build and check the card
         run: npm run check
 
+      # The tests, with the card's line / branch / function coverage in the log (test/load.mjs evaluates the source
+      # under its own path, so it is measured).
       - name: Unit tests
-        run: npm test
+        run: npm run coverage
 
       - name: Check hacs.json points to the built file
         run: |
